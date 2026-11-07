@@ -39,9 +39,6 @@ npm run deploy
 That builds the app and publishes the `coursecraft` Worker (rename it in `wrangler.jsonc`). Add a custom domain under
 Workers & Pages → your Worker → Settings → Domains.
 
-For CI (`.github/workflows/deploy.yml`) add two repository secrets: `CLOUDFLARE_API_TOKEN` (Workers edit permission)
-and `CLOUDFLARE_ACCOUNT_ID`. Pull requests run checks only; pushes to `main` deploy.
-
 ### What the Worker does
 
 `worker/index.ts` sits in front of the static assets. Real files are served by the asset layer. For any other path it

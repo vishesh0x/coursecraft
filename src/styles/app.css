@@ -97,8 +97,8 @@
 .player-bar { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 10px 16px; color: var(--a-text2); font-size: 0.9375rem; }
 .speed { display: flex; align-items: center; gap: 8px; }
 .speed select { width: auto; background: var(--a-raised); }
-.frame { display: block; width: 100%; height: min(78vh, 920px); border: 0; background: var(--a-raised); }
-.frame-light { background: #fff; }
+.doc-frame { display: block; width: 100%; height: min(78vh, 920px); border: 0; background: var(--a-raised); }
+.doc-frame-light { background: #fff; }
 .code { margin: 0; padding: 20px; overflow: auto; max-height: 70vh; color: var(--a-text); font: 0.9375rem / 1.65 var(--mono); tab-size: 4; }
 .code code { font: inherit; background: none; padding: 0; }
 .image-stage { display: grid; place-items: center; padding: 16px; background: var(--a-raised); }
@@ -126,22 +126,28 @@
 
 /* The picture of the player on the marketing pages ------------------------ */
 .mock { container: mock / inline-size; display: flex; flex: 1; min-width: 0; min-height: 0; width: 100%; background: var(--a-ground); color: var(--a-text); font-size: 1rem; line-height: 1.45; overflow: hidden; }
-.mock-inert { display: grid; grid-template-columns: minmax(210px, 36%) minmax(0, 1fr); flex: 1; min-width: 0; }
+.mock-inert { display: grid; grid-template-columns: minmax(220px, 34%) minmax(0, 1fr); flex: 1; min-width: 0; }
 .mock-side { padding: 20px 8px; overflow: hidden; border-right: 1px solid var(--a-rule); /* taste-skill-ignore: the ruled T-frame */ }
 .mock-side .side-title { padding: 0 10px 12px; }
-.mock-main { display: flex; flex-direction: column; gap: 14px; min-width: 0; padding: 20px; }
+.mock-main { display: flex; flex-direction: column; gap: 14px; min-width: 0; padding: 18px 16px; }
+.mock .tab { padding: 0 9px; font-size: 0.8125rem; }
+.mock .lesson-kind { display: none; }
+.mock .viewer { display: flex; flex: 1; flex-direction: column; min-width: 0; overflow: hidden; }
+.mock .panes { flex: 1; }
+.mock .shot { flex: 1; aspect-ratio: auto; min-height: 220px; }
 .mock-title { font-size: 1.25rem; font-weight: 500; letter-spacing: 0; }
 .mock .tabs { overflow: hidden; }
 .mock-controls { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: var(--a-text2); font-size: 0.875rem; font-variant-numeric: tabular-nums; }
 .mock-controls .meter { flex: 1; margin: 0; }
 @container mock (max-width: 640px) {
+  .cc { display: none; }
   .mock-inert { grid-template-columns: 1fr; }
   .mock-side { display: none; }
 }
 
-.panes { display: grid; }
+.panes { display: grid; min-width: 0; }
 .pane {
-  grid-area: 1 / 1; display: flex; flex-direction: column; min-height: 0; opacity: 0; visibility: hidden;
+  grid-area: 1 / 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; opacity: 0; visibility: hidden;
   transition: opacity var(--fade, 260ms) var(--fade-ease, var(--ease)), visibility 0s linear var(--fade, 260ms);
 }
 .pane[data-on="true"] { opacity: 1; visibility: visible; transition-delay: 0s; }

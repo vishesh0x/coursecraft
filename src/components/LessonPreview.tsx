@@ -10,9 +10,9 @@ export const PANES: { id: Pane; tab: string; file: string; size: string }[] = [
   { id: "code", tab: "Code", file: "Recursive descent.py", size: "3 KB" },
 ];
 
-const GRAMMAR = `expr    →  term (("+" | "-") term)*
-term    →  factor (("*" | "/") factor)*
-factor  →  NUMBER | "(" expr ")"`;
+const GRAMMAR = `expr → term (("+"|"-") term)*
+term → factor (("*"|"/") factor)*
+factor → NUMBER | "(" expr ")"`;
 
 const PARSER = `def parse_expr(tokens):
     node = parse_term(tokens)
@@ -57,7 +57,7 @@ export function PaneStack({ pane }: { pane: Pane }) {
 /** A static, inert picture of the player, built from the app's own tree component and styles. */
 export function PlayerFragment({ pane }: { pane: Pane }) {
   const current = PANES.find((p) => p.id === pane)!;
-  const files = ["Recursive descent.de.srt", "Recursive descent.en.srt", "Recursive descent.mp4", "Recursive descent.pdf", "Recursive descent.py"];
+  const files = ["Recursive descent.mp4", "Recursive descent.pdf", "Recursive descent.py"];
   const all = new Set(SAMPLE_COURSE.lessons.map((l) => l.id));
 
   return (

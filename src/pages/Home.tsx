@@ -148,6 +148,7 @@ function Menu() {
       <div className="frame">
         <div className="menu" style={{ clipPath: MENU_CUT }} data-reveal>
           <h2 id="menu-title">What it opens</h2>
+          <div className="menu-groups">
           {MENU.map((g) => (
             <div key={g.group} className="menu-group">
               <h3>{g.group}</h3>
@@ -165,6 +166,7 @@ function Menu() {
               </ul>
             </div>
           ))}
+          </div>
         </div>
       </div>
     </section>
@@ -207,8 +209,8 @@ function Showcase() {
 }
 
 const PROMISES = [
-  "No account", "No upload", "No analytics", "No cookies", "No fonts from elsewhere", "No requests once the page has loaded",
-  "Read-only access to your folder", "Progress kept in this browser", "Forget a course in one click",
+  "No account", "No upload", "No analytics", "No cookies", "No fonts from elsewhere",
+  "No requests once the page has loaded", "Read-only access to your folder", "Progress kept in this browser",
 ];
 
 function Proof() {
@@ -216,11 +218,9 @@ function Proof() {
     <section className="field field-ink proof" aria-labelledby="proof-title">
       <div className="programme" data-reveal>
         <h2 id="proof-title">Nothing leaves the tab</h2>
-        <p className="programme-names">
-          {PROMISES.map((p, i) => (
-            <span key={p}>{p}{i < PROMISES.length - 1 ? "\u00A0·\u00A0" : ""} </span>
-          ))}
-        </p>
+        <ul className="programme-names">
+          {PROMISES.map((p) => <li key={p}>{p}</li>)}
+        </ul>
         <div className="tipped" data-ui>
           <pre className="code"><code>{`Content-Security-Policy:
   default-src 'none'; script-src 'self';

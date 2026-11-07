@@ -202,7 +202,7 @@ export function MediaViewer(props: MediaViewerProps) {
       break;
     case "pdf":
       body = (
-        <object className="frame" data={loaded.url} type="application/pdf" aria-label={asset.name}>
+        <object className="doc-frame" data={loaded.url} type="application/pdf" aria-label={asset.name}>
           <div className="viewer-state"><h2>No PDF viewer here</h2><p>Your browser cannot show PDFs inline. Use “Save file” below.</p></div>
         </object>
       );
@@ -211,7 +211,7 @@ export function MediaViewer(props: MediaViewerProps) {
       body = (
         <>
           <p className="notice">Preview with scripts, links and outside requests switched off.</p>
-          <iframe className="frame frame-light" title={asset.name} src={loaded.url} sandbox="" referrerPolicy="no-referrer" />
+          <iframe className="doc-frame doc-frame-light" title={asset.name} src={loaded.url} sandbox="" referrerPolicy="no-referrer" />
         </>
       );
       break;

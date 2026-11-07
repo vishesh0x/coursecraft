@@ -1,54 +1,31 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router";
+import "@fontsource/eb-garamond/400.css";
+import "@fontsource/eb-garamond/400-italic.css";
+import "@fontsource/eb-garamond/500.css";
+import "@fontsource/eb-garamond/500-italic.css";
+import "./styles/tokens.css";
+import "./styles/site.css";
+import "./styles/app.css";
 import App from "./App";
-import "./styles.css";
+import { ErrorBoundary } from "./components/ErrorBoundary";
+import { CourseProvider } from "./state/CourseContext";
 
-class ErrorBoundary extends React.Component<
-  { children: React.ReactNode },
-  { failed: boolean }
-> {
-  state = { failed: false };
-
-  static getDerivedStateFromError() {
-    return { failed: true };
-  }
-
-  componentDidCatch(error: Error, info: React.ErrorInfo) {
-    console.error("Coursecraft rendering error", error, info);
-  }
-
-  render() {
-    if (this.state.failed) {
-      return (
-        <main className="fatal-error">
-          <div className="brand-mark">c</div>
-          <h1>Something interrupted your learning space.</h1>
-          <p>
-            Your original course files are safe. Reload the application to
-            reopen your library.
-          </p>
-          <button
-            className="button primary"
-            onClick={() => window.location.reload()}
-          >
-            Reload application
-          </button>
-        </main>
-      );
-    }
-
-    return this.props.children;
-  }
-}
+// Entrance animations only apply when script is running, so content is never left hidden.
+document.documentElement.classList.add("js");
 
 const root = document.getElementById("root");
+if (!root) throw new Error("Missing #root");
 
-if (!root) throw new Error("Missing application root.");
-
-ReactDOM.createRoot(root).render(
-  <React.StrictMode>
+createRoot(root).render(
+  <StrictMode>
     <ErrorBoundary>
-      <App />
+      <BrowserRouter>
+        <CourseProvider>
+          <App />
+        </CourseProvider>
+      </BrowserRouter>
     </ErrorBoundary>
-  </React.StrictMode>,
+  </StrictMode>,
 );

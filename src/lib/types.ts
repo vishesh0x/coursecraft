@@ -1,24 +1,11 @@
-export const ASSET_KINDS = [
-  "video",
-  "subtitle",
-  "pdf",
-  "html",
-  "text",
-  "image",
-  "other",
-] as const;
-
+export const ASSET_KINDS = ["video", "subtitle", "pdf", "html", "text", "image", "other"] as const;
 export type AssetKind = (typeof ASSET_KINDS)[number];
 
 export type FileSource =
-  | {
-      type: "handle";
-      handle: FileSystemFileHandle;
-    }
-  | {
-      type: "file";
-      file: File;
-    };
+  | { type: "handle"; handle: FileSystemFileHandle }
+  | { type: "file"; file: File }
+  /** Sample data on the marketing pages: there is nothing to read. */
+  | { type: "none" };
 
 export interface CourseFile {
   id: string;
@@ -32,9 +19,6 @@ export interface CourseFile {
   lastModified: number;
   mimeType: string;
   source: FileSource;
-
-  // Transient only. Never persisted to IndexedDB.
-  blobUrl?: string;
 }
 
 export interface LessonUnit {
@@ -42,16 +26,7 @@ export interface LessonUnit {
   title: string;
   chapterId: string;
   files: CourseFile[];
-
-  video: CourseFile[];
-  subtitle: CourseFile[];
-  pdf: CourseFile[];
-  html: CourseFile[];
-  text: CourseFile[];
-  image: CourseFile[];
-  other: CourseFile[];
-
-  completed: boolean;
+  byKind: Record<AssetKind, CourseFile[]>;
 }
 
 export interface Chapter {
@@ -88,15 +63,6 @@ export interface CourseSession {
   updatedAt: number;
 }
 
-export interface CourseState {
-  activeCourse: Course;
-  activeLessonId: string | null;
-  watchProgress: Record<string, VideoProgress>;
-  queue: string[];
-  queueIndex: number;
-  autoplayNext: boolean;
-}
-
 export interface CourseRecord {
   id: string;
   name: string;
@@ -114,13 +80,14 @@ export interface PlaybackSample {
   watchedDelta: number;
 }
 
+export interface FileEntry {
+  relativePath: string;
+  size: number;
+  lastModified: number;
+  mimeHint?: string;
+  source: FileSource;
+}
+
 export function emptySession(id: string): CourseSession {
-  return {
-    id,
-    activeLessonId: null,
-    activeAssetId: null,
-    videos: {},
-    completed: {},
-    updatedAt: Date.now(),
-  };
+  return { id, activeLessonId: null, activeAssetId: null, videos: {}, completed: {}, updatedAt: Date.now() };
 }

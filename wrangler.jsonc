@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "coursecraft",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    // The worker (not the asset layer) serves the app shell, so unknown routes
+    // get a real 404 and missing files stay 404s. Hashed build files under
+    // /assets skip the worker entirely and are served straight from the edge.
+    "run_worker_first": ["/*", "!/assets/*"]
+  },
+  "observability": { "enabled": false }
+}

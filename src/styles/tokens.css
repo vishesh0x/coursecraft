@@ -1,0 +1,37 @@
+:root {
+  /* Page: two inks and the ground the paper sits on, like a two-colour print job. */
+  --ground: #ff7a1f;
+  --surface: #ff8633;
+  --paper: #ffffff;
+  --ink: #050f16;
+  --muted: #5a2306;
+
+  --serif: "EB Garamond", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; /* taste-skill-ignore: literal code only */
+
+  /* Five sizes, no more. */
+  --step-small: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
+  --step-body: clamp(1.125rem, 1.05rem + 0.3vw, 1.3125rem);
+  --step-lead: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
+  --step-h2: clamp(2rem, 1.2rem + 2.6vw, 3.25rem);
+  --step-head: clamp(2.25rem, 1.3rem + 3.4vw, 4rem);
+
+  --margin: clamp(16px, 2.2vw, 32px);
+  --gap: 12px;
+
+  /* Strong curves. The built-in keywords are too timid to feel intentional. */
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* The player: true black, lifted by lightness alone. Orange appears only on data. */
+  --a-ground: #06090c;
+  --a-card: #10161a;
+  --a-raised: #1b2227;
+  --a-rule: #1c2329;
+  --a-line: #34404a;
+  --a-text: #f2f2f2;
+  --a-text2: #b4b4b4;
+  --a-text3: #949494;
+  --a-hue: #ff7a1f;
+}

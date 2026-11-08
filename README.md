@@ -12,7 +12,7 @@ This is a ground-up redesign and rebuild of the original Vite + React prototype.
 | --- | --- |
 | UI | React 19, TypeScript (strict), React Router |
 | Build | Vite |
-| Type | EB Garamond, self-hosted via `@fontsource` (no font service, so the CSP can stay closed) |
+| Type | Plus Jakarta Sans and Inter (variable), self-hosted via `@fontsource-variable`, so the CSP can stay closed |
 | Storage | IndexedDB (course records, folder handles, progress) |
 | Hosting | Cloudflare Workers with Static Assets (`wrangler.jsonc`) |
 | Tests | Vitest (grouping, captions, storage validation, route and header contract, render smoke tests) |
@@ -47,6 +47,18 @@ everything else (React Router draws the 404 page). A missing `/assets/…` file 
 HTML. Hashed assets skip the Worker entirely (`run_worker_first` in `wrangler.jsonc`).
 
 > **Keep in sync:** a new `<Route>` in `src/App.tsx` must also be added to `worker/routes.ts`. A test fails if you forget.
+
+## Design
+
+A warm gray canvas, white cards, pill-shaped controls and one highlighter yellow. The type is Plus Jakarta Sans for
+display and Inter for interface text, both self-hosted. The landing page leads with the product: the hero is a working
+copy of the player (pick lessons, switch files, mark one finished) running on sample data through the app's own grouping
+code, and "Folders become chapters" lets you edit file names and watch the contents regroup. A highlighter swipe over
+"course." is the one signature device. The player itself uses the same system: a white sidebar card, pill tabs, the media
+in a white card, and yellow only on progress and finished lessons.
+
+Motion follows a short list of rules: strong ease-out curves, 160ms press feedback on controls, hover effects only on
+real pointers, only transform, opacity and clip-path animated for entrances, and a reduced-motion fallback for all of it.
 
 ## Pages
 

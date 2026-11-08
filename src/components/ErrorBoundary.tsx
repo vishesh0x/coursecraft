@@ -1,4 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
+import { DocPage } from "./DocPage";
 
 /** Plain anchors and no router hooks on purpose: this must render even when the router itself failed. */
 export class ErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
@@ -15,18 +16,15 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { failed: 
   render() {
     if (!this.state.failed) return this.props.children;
     return (
-      <main className="doc-page" id="main">
-        <article className="sheet">
-          <h1>Something interrupted the lesson</h1>
-          <p className="doc-lede">
-            Your course files are untouched, and your progress was saved as it went. Reload to open your library again.
-          </p>
-          <p className="doc-actions">
-            <button className="btn" onClick={() => window.location.reload()}>Reload Coursecraft</button>
-            <a className="text-link" href="/">Go to the start</a>
-          </p>
-        </article>
-      </main>
+      <DocPage
+        title="Something interrupted the lesson"
+        lede="Your course files are untouched, and your progress was saved as it went. Reload to open your library again."
+      >
+        <p className="doc-actions">
+          <button className="pill pill-hi pill-lg" onClick={() => window.location.reload()}>Reload Coursecraft</button>
+          <a className="text-link" href="/">Go to the start</a>
+        </p>
+      </DocPage>
     );
   }
 }

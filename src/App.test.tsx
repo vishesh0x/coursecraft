@@ -19,15 +19,16 @@ function render(path: string): string {
   ).replace(/<!-- -->/g, "");
 }
 
-const h1 = (html: string) => html.match(/<h1[^>]*>(.*?)<\/h1>/)?.[1] ?? "";
+const h1 = (html: string) => html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)?.[1] ?? "";
 const count = (html: string, tag: string) => (html.match(new RegExp(`<${tag}[\\s>]`, "g")) ?? []).length;
 
 describe("routes render", () => {
   it("home has one h1, the demo and every section heading", () => {
     const html = render("/");
     expect(count(html, "h1")).toBe(1);
-    expect(h1(html)).toContain("Open a folder. Get a course.");
-    for (const text of ["Folders become chapters", "What it opens", "One lesson, every file", "Nothing leaves the tab", "Questions", "Pick a folder"]) {
+    expect(h1(html)).toContain("Open a folder,");
+    expect(h1(html)).toContain("course.");
+    for (const text of ["Folders become chapters", "Everything a lesson holds", "Nothing leaves the tab", "Questions, answered plainly", "press play"]) {
       expect(html).toContain(text);
     }
     // The live demo runs the real grouping function on the sample paths.

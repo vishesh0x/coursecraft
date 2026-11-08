@@ -1,50 +1,56 @@
-import { useState, type CSSProperties } from "react";
+import { useState, type CSSProperties, type ReactNode } from "react";
 import { Link } from "react-router";
 import { ContentsDemo } from "../components/ContentsSheet";
-import { HeroRoom, PANES, PaneStack, type Pane } from "../components/LessonPreview";
-import { Stripe } from "../components/Site";
+import { HeroPlayer } from "../components/HeroPlayer";
+import { Check, FolderSticker, PlaySticker } from "../components/Stickers";
 import { formatBytes, plural } from "../lib/format";
-import { zigzag } from "../lib/shapes";
 import type { CourseRecord } from "../lib/types";
 import { usePageMeta } from "../lib/usePageMeta";
 import { useCourses } from "../state/CourseContext";
 
 const delay = (i: number) => ({ "--i": i }) as CSSProperties;
-const MENU_CUT = zigzag(26, 10, { top: true, bottom: true });
 
 function Hero() {
-  const { choose, chooseCompat, nativePicker, loading, scanned, cancel } = useCourses();
+  const { choose, loading, scanned, cancel } = useCourses();
   return (
     <section className="hero" aria-labelledby="hero-title">
-      <HeroRoom />
-      <div className="hero-card">
-        <Stripe />
-        <div className="hero-body">
-          <h1 id="hero-title">Open a folder. Get a course.</h1>
-          <p className="hero-lede">
-            Coursecraft reads a folder on your computer, sets it as chapters and lessons, and remembers where you stopped.
-            Nothing is uploaded.
-          </p>
-          {loading ? (
-            <div className="scan" role="status" aria-live="polite">
-              <p>Reading your folder: {plural(scanned, "file")} so far.</p>
-              <button className="btn btn-quiet" onClick={cancel}>Cancel</button>
-            </div>
-          ) : (
-            <>
-              <button className="btn" onClick={() => void choose()}>Open a course folder</button>
-              {nativePicker && (
-                <button className="text-btn" onClick={chooseCompat}>Use the basic folder picker instead</button>
-              )}
-            </>
-          )}
+      <h1 id="hero-title" className="rise" style={delay(0)}>
+        Open a folder,<FolderSticker />
+        <br />
+        get a <span className="mark">course.</span><PlaySticker />
+      </h1>
+      <p className="hero-sub rise" style={delay(1)}>
+        Coursecraft plays the course already on your disk, one lesson at a time, and remembers where you stopped.
+        Nothing is uploaded.
+      </p>
+      {loading ? (
+        <p className="hero-scan rise" role="status" aria-live="polite" style={delay(2)}>
+          Reading your folder: {plural(scanned, "file")} so far.{" "}
+          <button className="text-btn" onClick={cancel}>Cancel</button>
+        </p>
+      ) : (
+        <div className="pair rise" style={delay(2)}>
+          <button className="pill pill-hi pill-lg" onClick={() => void choose()}>Open a course folder</button>
+          <a className="pill pill-ink pill-lg" href="#how">See how it works</a>
         </div>
-        <nav className="hero-links" aria-label="About">
-          <Link to="/how-it-works">How it works</Link>
-          <Link to="/browsers">Browsers</Link>
-          <Link to="/privacy">Privacy</Link>
-        </nav>
+      )}
+      <div className="hero-stage rise" style={delay(3)}>
+        <HeroPlayer />
       </div>
+    </section>
+  );
+}
+
+const FILE_TYPES = ["mp4", "webm", "mov", "mkv", "srt", "vtt", "pdf", "html", "md", "txt", "py", "js", "json", "sql", "png", "jpg", "svg", "gif"];
+
+function Opens() {
+  return (
+    <section className="opens" aria-labelledby="opens-title">
+      <p id="opens-title" data-reveal>Opens the files already in your course folder</p>
+      <ul data-reveal style={delay(1)}>
+        {FILE_TYPES.map((t) => <li key={t}>{t}</li>)}
+        <li className="more">and about forty more as plain text</li>
+      </ul>
     </section>
   );
 }
@@ -54,7 +60,7 @@ function Stub({ record, busy }: { record: CourseRecord; busy: boolean }) {
   const [sure, setSure] = useState(false);
   return (
     <div className="stub">
-      <div className="stub-main">
+      <div>
         <h3 title={record.name}>{record.name}</h3>
         <p>
           {plural(record.lessonCount, "lesson")}, {formatBytes(record.totalBytes)}. Last opened{" "}
@@ -62,7 +68,7 @@ function Stub({ record, busy }: { record: CourseRecord; busy: boolean }) {
         </p>
       </div>
       <div className="stub-actions">
-        <button className="btn btn-small" disabled={busy} onClick={() => void reopen(record)}>
+        <button className="pill pill-hi" disabled={busy} onClick={() => void reopen(record)}>
           {record.handle ? "Resume" : "Choose the folder again"}
         </button>
         {sure ? (
@@ -82,154 +88,93 @@ function Library() {
   const { history, loading } = useCourses();
   if (!history.length) return null;
   return (
-    <section className="field field-ground" aria-labelledby="library-title">
-      <div className="frame">
-        <h2 id="library-title" data-reveal>Pick up where you stopped</h2>
-        <ul className="stubs">
-          {history.map((r, i) => <li key={r.id} data-reveal style={delay(i)}><Stub record={r} busy={loading} /></li>)}
-        </ul>
-        <p className="fine" data-reveal>Forgetting a course removes its progress from this browser. The files in your folder are never touched.</p>
-      </div>
+    <section className="block" aria-labelledby="library-title">
+      <h2 id="library-title" data-reveal>Pick up where you stopped</h2>
+      <ul className="stubs">
+        {history.map((r, i) => <li key={r.id} data-reveal style={delay(i)}><Stub record={r} busy={loading} /></li>)}
+      </ul>
+      <p className="fine" data-reveal>Forgetting a course removes its progress from this browser. The files in your folder are never touched.</p>
     </section>
   );
 }
 
 function HowItWorks() {
   return (
-    <section className="field field-ink" aria-labelledby="how-title">
-      <div className="frame" data-reveal>
-        <ContentsDemo
-          intro={
-            <>
-              <h2 id="how-title">Folders become chapters</h2>
-              <p className="measure">
-                Each folder is a chapter. Files that share a name are one lesson, so a video, its captions and its slides
-                stay together. Try it on your own file names.
-              </p>
-            </>
-          }
-        />
+    <section className="block" id="how" aria-labelledby="how-title">
+      <div className="block-head" data-reveal>
+        <h2 id="how-title">Folders become chapters</h2>
+        <p>
+          Each folder is a chapter. Files that share a name are one lesson, so a video, its captions and its slides stay
+          together. Try it on your own file names.
+        </p>
       </div>
+      <div className="demo-card" data-reveal style={delay(1)}>
+        <ContentsDemo />
+      </div>
+      <dl className="steps">
+        <div data-reveal><dt>Open</dt><dd>Choose the folder that holds your course. Coursecraft reads it where it is and never copies it.</dd></div>
+        <div data-reveal style={delay(1)}><dt>Group</dt><dd>Chapters come from folders, lessons from matching names. Nothing to import, tag or rename.</dd></div>
+        <div data-reveal style={delay(2)}><dt>Resume</dt><dd>The position in every video is kept in this browser, so tomorrow starts where today stopped.</dd></div>
+      </dl>
     </section>
   );
 }
 
-const MENU: { group: string; items: { name: string; note: string; value: string }[] }[] = [
-  {
-    group: "Plays",
-    items: [
-      { name: "Video", note: "mp4, webm, mov, m4v, ogv and mkv, as far as your browser’s codecs go.", value: "0.5 to 2× speed" },
-      { name: "Captions", note: "srt or vtt beside the video. Suffixes such as .en and .de are matched; srt is converted as it loads.", value: "any number" },
-      { name: "PDF", note: "Shown in your browser’s own viewer.", value: "any size" },
-    ],
-  },
-  {
-    group: "Shows",
-    items: [
-      { name: "HTML pages", note: "Scripts, links, frames and outside requests are switched off.", value: "up to 8 MB" },
-      { name: "Code and notes", note: "md, txt, py, js, json, sql and more than forty other extensions, as plain text.", value: "first 2 MB" },
-      { name: "Images", note: "jpg, png, webp, gif, avif, svg and bmp.", value: "included" },
-    ],
-  },
-  {
-    group: "Remembers",
-    items: [
-      { name: "Where you stopped", note: "The position in every video, restored the next time it opens.", value: "per video" },
-      { name: "Finished lessons", note: "Marked by you, or when a video reaches its end.", value: "per lesson" },
-      { name: "Time watched", note: "Counted from playback itself, so skipping around adds nothing.", value: "per course" },
-      { name: "The folder", note: "Reopened in one click where the browser allows it.", value: "Chrome, Edge" },
-    ],
-  },
-];
-
-function Menu() {
+function Features() {
   return (
-    <section className="field field-ground" aria-labelledby="menu-title">
-      <div className="frame">
-        <div className="menu" style={{ clipPath: MENU_CUT }} data-reveal>
-          <h2 id="menu-title">What it opens</h2>
-          <div className="menu-groups">
-          {MENU.map((g) => (
-            <div key={g.group} className="menu-group">
-              <h3>{g.group}</h3>
-              <ul>
-                {g.items.map((it) => (
-                  <li key={it.name}>
-                    <div className="menu-row">
-                      <span className="menu-name">{it.name}</span>
-                      <span className="leader" aria-hidden="true" />
-                      <span className="menu-value">{it.value}</span>
-                    </div>
-                    <p>{it.note}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+    <section className="block" aria-labelledby="features-title">
+      <h2 id="features-title" className="center" data-reveal>Everything a lesson holds, in one place</h2>
+      <div className="bento">
+        <article className="tile tile-wide" data-reveal>
+          <h3>One lesson, every file</h3>
+          <p>Video, captions, slides and exercises sit behind one set of tabs, so a lesson never ends up spread over six windows.</p>
+          <div className="mini-tabs" data-ui aria-hidden="true">
+            <span data-on="true">Recursive descent.mp4</span><span>Recursive descent.pdf</span><span>Recursive descent.py</span><span>.en.srt</span>
           </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Showcase() {
-  const { choose } = useCourses();
-  const [pane, setPane] = useState<Pane>("video");
-  const current = PANES.find((p) => p.id === pane)!;
-  return (
-    <section className="showcase" aria-labelledby="showcase-title">
-      <div className="showcase-plate" data-reveal>
-        <div className="plate" data-ui>
-          <div className="viewer">
-            <PaneStack pane={pane} />
-            <div className="viewer-foot"><span>{current.file}</span><span>{current.size}</span></div>
+        </article>
+        <article className="tile tile-hi" data-reveal style={delay(1)}>
+          <h3>Resumes where you stopped</h3>
+          <p>Position, finished lessons and time actually watched, kept per course.</p>
+          <div className="mini-resume" data-ui aria-hidden="true">
+            <strong>12:40</strong><span>of 33:12</span>
+            <div className="meter"><span style={{ width: "38%" }} /></div>
           </div>
-        </div>
-      </div>
-      <div className="showcase-copy">
-        <div className="showcase-tabs" role="group" aria-label="Files in the lesson">
-          {PANES.map((p) => (
-            <button key={p.id} aria-pressed={pane === p.id} onClick={() => setPane(p.id)}>{p.tab}</button>
-          ))}
-        </div>
-        <div data-reveal>
-          <h2 id="showcase-title">One lesson, every file</h2>
-          <p className="measure">
-            Video, captions, slides and exercises sit behind one set of tabs, so a lesson never ends up spread over six windows.
-          </p>
-        </div>
-        <div className="cells">
-          <button className="cell cell-ink" onClick={() => void choose()}>Open a course folder</button>
-          <Link className="cell cell-tone" to="/how-it-works">Read how it works</Link>
-        </div>
+        </article>
+        <article className="tile" data-reveal>
+          <h3>Captions match by name</h3>
+          <p>srt or vtt beside the video, in any language. Suffixes like .en and .de are matched, and srt is converted as it loads.</p>
+          <pre className="mini-code" aria-hidden="true"><code>{"Lesson.mp4\nLesson.en.srt  → English\nLesson.de.srt  → Deutsch"}</code></pre>
+        </article>
+        <article className="tile tile-ink tile-wide" data-reveal style={delay(1)}>
+          <h3>HTML previews run in a sandbox</h3>
+          <p>An HTML page from your course shows with scripts, links, frames and outside requests switched off. It cannot reach the app or your files.</p>
+          <pre className="mini-code" aria-hidden="true"><code>{'<iframe sandbox="" src="blob:…">\n  scripts: off · forms: off · links: off'}</code></pre>
+        </article>
       </div>
     </section>
   );
 }
 
-const PROMISES = [
-  "No account", "No upload", "No analytics", "No cookies", "No fonts from elsewhere",
-  "No requests once the page has loaded", "Read-only access to your folder", "Progress kept in this browser",
-];
+const PROMISES = ["No account to make", "No upload, ever", "No analytics or cookies", "No requests once the page has loaded", "Folders opened read-only"];
 
-function Proof() {
+function Privacy() {
   return (
-    <section className="field field-ink proof" aria-labelledby="proof-title">
-      <div className="programme" data-reveal>
-        <h2 id="proof-title">Nothing leaves the tab</h2>
-        <ul className="programme-names">
-          {PROMISES.map((p) => <li key={p}>{p}</li>)}
+    <section className="privacy" aria-labelledby="privacy-title">
+      <div className="privacy-copy" data-reveal>
+        <h2 id="privacy-title">Nothing leaves the tab</h2>
+        <p>
+          The browser enforces this with a content security policy that leaves the page no way to make a request.{" "}
+          <Link to="/privacy">Read the policy.</Link>
+        </p>
+      </div>
+      <div className="privacy-body" data-reveal style={delay(1)}>
+        <ul>
+          {PROMISES.map((p) => <li key={p}><Check />{p}</li>)}
         </ul>
-        <div className="tipped" data-ui>
-          <pre className="code"><code>{`Content-Security-Policy:
+        <pre className="policy"><code>{`Content-Security-Policy:
   default-src 'none'; script-src 'self';
   connect-src 'none'; form-action 'none';
   frame-ancestors 'none'; …`}</code></pre>
-        </div>
-        <p className="programme-note">
-          The page is served with a policy that forbids it from making network requests. <Link to="/privacy">Read the whole policy.</Link>
-        </p>
       </div>
     </section>
   );
@@ -241,59 +186,49 @@ const FAQ: { q: string; a: string }[] = [
   { q: "What if I move the folder?", a: "Open it again from its new place. It is recognised when the folder name, file names, sizes and dates match; a copy that changes the dates starts fresh." },
   { q: "Where is my progress kept?", a: "In this browser’s own storage on this device, under this site’s address. Clearing site data removes it, and so does Forget in your library." },
   { q: "Does it work offline?", a: "The page has to load once. It has no service worker, so a later offline visit depends on your browser’s cache. Your course files never need the network." },
-  { q: "Does it change my files?", a: "No. The folder is opened read-only, and nothing is written to it, moved or renamed." },
+  { q: "Which browsers work?", a: "Chrome and Edge reopen a course in one click. Firefox and Safari open folders too, but ask for the folder each visit. The browsers page has the details." },
 ];
 
-function Questions() {
+function Faq() {
+  const [open, setOpen] = useState(0);
   return (
-    <section className="field field-ground faq" aria-labelledby="faq-title">
-      <div className="frame split-5">
-        <div data-reveal>
-          <h2 id="faq-title">Questions</h2>
-          <p className="facts-lines">
-            Chrome and Edge reopen a course in one click. Firefox and Safari ask for the folder each time. Coursecraft is
-            open source under the MIT licence.
-          </p>
-          <div className="qa">
-            {FAQ.map((f) => (
-              <details key={f.q} name="faq">
-                <summary>{f.q}</summary>
-                <p>{f.a}</p>
-              </details>
-            ))}
-          </div>
-          <p><Link className="text-link" to="/browsers">Which browsers, in detail</Link></p>
-        </div>
-        <aside className="faq-card" data-reveal style={delay(1)} aria-label="Browser support at a glance">
-          <table>
-            <caption>What each browser can do</caption>
-            <thead>
-              <tr><th scope="col"><span className="visually-hidden">Ability</span></th><th scope="col">Chrome, Edge</th><th scope="col">Firefox</th><th scope="col">Safari</th></tr>
-            </thead>
-            <tbody>
-              <tr><th scope="row">Open a folder</th><td>Yes</td><td>Yes</td><td>Yes</td></tr>
-              <tr><th scope="row">Reopen in one click</th><td>Yes</td><td>No</td><td>No</td></tr>
-              <tr><th scope="row">Keep your progress</th><td>Yes</td><td>Yes</td><td>Yes</td></tr>
-              <tr><th scope="row">Folder opened read-only</th><td>Yes</td><td>Yes</td><td>Yes</td></tr>
-            </tbody>
-          </table>
-        </aside>
+    <section className="block faq" aria-labelledby="faq-title">
+      <h2 id="faq-title" data-reveal>Questions, answered plainly</h2>
+      <div className="faq-list" data-reveal style={delay(1)}>
+        {FAQ.map((f, i) => {
+          const on = open === i;
+          return (
+            <div className="faq-item" key={f.q} data-open={on}>
+              <h3>
+                <button aria-expanded={on} aria-controls={`faq-${i}`} id={`faq-q-${i}`} onClick={() => setOpen(on ? -1 : i)}>
+                  <span>{f.q}</span>
+                  <span className="faq-chev" aria-hidden="true" />
+                </button>
+              </h3>
+              <div className="faq-panel" id={`faq-${i}`} role="region" aria-labelledby={`faq-q-${i}`}>
+                <div><p>{f.a}</p></div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );
 }
 
-function Reply() {
-  const { choose } = useCourses();
+function Close(): ReactNode {
+  const { choose, loading } = useCourses();
   return (
-    <section className="field field-ink reply" aria-labelledby="reply-title">
-      <p className="reply-note" data-reveal>
-        The first lesson waits where you left it, or at the beginning if you have not been here before.
-      </p>
-      <div className="reply-card" data-reveal style={delay(1)}>
-        <h2 id="reply-title">Pick a folder</h2>
-        <p>Choose the folder that holds the course. It opens in a moment.</p>
-        <button className="bar-btn" onClick={() => void choose()}>Open a course folder</button>
+    <section className="close" aria-labelledby="close-title" data-reveal>
+      <h2 id="close-title">
+        Pick a folder,<FolderSticker />
+        <br />
+        press play.<PlaySticker />
+      </h2>
+      <p>The first lesson waits where you left it, or at the beginning if you have not been here before.</p>
+      <div className="pair">
+        <button className="pill pill-ink pill-lg" disabled={loading} onClick={() => void choose()}>Open a course folder</button>
+        <Link className="pill pill-white pill-lg" to="/how-it-works">Read how it works</Link>
       </div>
     </section>
   );
@@ -304,13 +239,13 @@ export default function Home() {
   return (
     <main id="main">
       <Hero />
+      <Opens />
       <Library />
       <HowItWorks />
-      <Menu />
-      <Showcase />
-      <Proof />
-      <Questions />
-      <Reply />
+      <Features />
+      <Privacy />
+      <Faq />
+      <Close />
     </main>
   );
 }

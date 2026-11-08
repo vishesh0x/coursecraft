@@ -1,54 +1,53 @@
 import { useEffect, type ReactNode } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router";
-import { scallopPath } from "../lib/shapes";
 import { useCourses } from "../state/CourseContext";
-
-export function Stripe({ bars = 48 }: { bars?: number }) {
-  return (
-    <div className="stripe" aria-hidden="true">
-      {Array.from({ length: bars }, (_, i) => <span key={i} />)}
-    </div>
-  );
-}
+import { LogoMark } from "./Stickers";
 
 export function SiteHeader() {
-  const { choose } = useCourses();
+  const { choose, loading } = useCourses();
   return (
-    <header className="site-head">
-      <Link to="/" className="wordmark" aria-label="Coursecraft, home">Coursecraft</Link>
-      <nav className="site-nav" aria-label="Main">
-        <NavLink to="/how-it-works">How it works</NavLink>
-        <NavLink to="/browsers">Browsers</NavLink>
-        <NavLink to="/privacy">Privacy</NavLink>
-      </nav>
-      <button className="btn btn-small" onClick={() => void choose()}>Open a course folder</button>
+    <header className="nav-wrap">
+      <div className="nav">
+        <Link to="/" className="brand" aria-label="Coursecraft, home">
+          <LogoMark />
+          <span>Coursecraft</span>
+        </Link>
+        <nav className="nav-links" aria-label="Main">
+          <NavLink to="/how-it-works">How it works</NavLink>
+          <NavLink to="/browsers">Browsers</NavLink>
+          <NavLink to="/privacy">Privacy</NavLink>
+        </nav>
+        <button className="pill pill-ink" disabled={loading} onClick={() => void choose()}>
+          <span className="long">Open a course folder</span>
+          <span className="short">Open folder</span>
+        </button>
+      </div>
     </header>
   );
 }
 
 export function SiteFooter() {
   return (
-    <footer className="site-foot">
-      <div className="foot-card">
-        <svg className="scallops" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-          <path d={scallopPath(12)} />
-        </svg>
-        <div className="foot-body">
-          <div className="foot-note">
-            <p className="foot-title">Study at your own pace.</p>
-            <p>
-              Coursecraft runs in your browser tab. There is no server for your course to be sent to, and no account to
-              keep it under.
-            </p>
-          </div>
-          <nav className="foot-links" aria-label="Footer">
-            <Link to="/how-it-works">How it works</Link>
-            <Link to="/browsers">Which browsers</Link>
-            <Link to="/privacy">Privacy and security</Link>
-            <a href="/.well-known/security.txt">Report a vulnerability</a>
-          </nav>
+    <footer className="foot-wrap">
+      <div className="foot">
+        <div className="foot-brand">
+          <Link to="/" className="brand" aria-label="Coursecraft, home">
+            <LogoMark />
+            <span>Coursecraft</span>
+          </Link>
+          <p>Plays the course already on your disk. It runs in your browser tab, so there is no server for your course to be sent to.</p>
         </div>
-        <p className="imprint">Coursecraft · open source under the MIT licence</p>
+        <nav className="foot-col" aria-label="Learn more">
+          <h2>Learn</h2>
+          <Link to="/how-it-works">How it works</Link>
+          <Link to="/browsers">Which browsers</Link>
+        </nav>
+        <nav className="foot-col" aria-label="Trust">
+          <h2>Trust</h2>
+          <Link to="/privacy">Privacy and security</Link>
+          <a href="/.well-known/security.txt">Report a vulnerability</a>
+        </nav>
+        <p className="foot-credits">© 2026 Coursecraft, open source under the MIT licence. Set in Plus Jakarta Sans and Inter, SIL Open Font Licence.</p>
       </div>
     </footer>
   );
@@ -65,20 +64,28 @@ export function Toast() {
   );
 }
 
-/** Reveals `[data-reveal]` blocks once as they enter the screen. Content stays visible without script. */
+/**
+ * Reveals `[data-reveal]` blocks once as they come into view. A scroll check rather than an observer, so a block the
+ * visitor jumped past (End key, scrollbar drag, an anchor) is revealed too instead of staying invisible.
+ */
 function useReveal(key: string): void {
   useEffect(() => {
-    const targets = [...document.querySelectorAll<HTMLElement>("[data-reveal]:not([data-in])")];
-    if (!("IntersectionObserver" in window)) { targets.forEach((t) => t.setAttribute("data-in", "")); return; }
-    const io = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue;
-        entry.target.setAttribute("data-in", "");
-        io.unobserve(entry.target);
+    const pending = new Set(document.querySelectorAll<HTMLElement>("[data-reveal]:not([data-in])"));
+    let frame = 0;
+    const check = () => {
+      frame = 0;
+      const line = window.innerHeight * 0.92;
+      for (const el of pending) {
+        if (el.getBoundingClientRect().top < line) { el.setAttribute("data-in", ""); pending.delete(el); }
       }
-    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
-    targets.forEach((t) => io.observe(t));
-    return () => io.disconnect();
+      if (!pending.size) detach();
+    };
+    const onScroll = () => { if (!frame) frame = requestAnimationFrame(check); };
+    const detach = () => { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onScroll); };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    check();
+    return () => { detach(); if (frame) cancelAnimationFrame(frame); };
   }, [key]);
 }
 

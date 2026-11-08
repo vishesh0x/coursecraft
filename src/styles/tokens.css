@@ -1,37 +1,38 @@
 :root {
-  /* Page: two inks and the ground the paper sits on, like a two-colour print job. */
-  --ground: #ff7a1f;
-  --surface: #ff8633;
-  --paper: #ffffff;
-  --ink: #050f16;
-  --muted: #5a2306;
+  /* A warm gray canvas, white cards that sit on it, near-black ink, and one highlighter yellow. */
+  --canvas: #f3f2ef;
+  --card: #ffffff;
+  --tone: #ebe9e4;
+  --ink: #18181b;
+  --body: #3d3d43;
+  --muted: #6a6a72;
+  --hi: #f5e642;
+  --hi-press: #e9d82a;
+  --on-ink: #ffffff;
+  --on-ink-muted: #b9b9c0;
 
-  --serif: "EB Garamond", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --display: "Plus Jakarta Sans Variable", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --sans: "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; /* taste-skill-ignore: literal code only */
 
-  /* Five sizes, no more. */
-  --step-small: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
-  --step-body: clamp(1.125rem, 1.05rem + 0.3vw, 1.3125rem);
-  --step-lead: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
-  --step-h2: clamp(2rem, 1.2rem + 2.6vw, 3.25rem);
-  --step-head: clamp(2.25rem, 1.3rem + 3.4vw, 4rem);
+  --step-small: 0.875rem;
+  --step-body: 1.0625rem;
+  --step-lead: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+  --step-h2: clamp(2rem, 1.3rem + 3vw, 3.5rem);
+  --step-h1: clamp(2.75rem, 1.2rem + 6.4vw, 5.25rem);
 
-  --margin: clamp(16px, 2.2vw, 32px);
-  --gap: 12px;
+  --r-pill: 9999px;
+  --r-card: 32px;
+  --r-tile: 24px;
+  --r-sm: 14px;
+  --gutter: clamp(16px, 3vw, 32px);
+  --w: 1200px;
 
-  /* Strong curves. The built-in keywords are too timid to feel intentional. */
+  /* Two shadows on the whole site: the floating nav, and the hero product that hovers above the canvas. */
+  --lift-nav: 0 10px 10px -5px rgba(24, 24, 27, 0.18);
+  --lift-hero: 0 120px 48px 0 rgba(24, 24, 27, 0.01), 0 67px 40px 0 rgba(24, 24, 27, 0.05), 0 30px 30px 0 rgba(24, 24, 27, 0.09), 0 7px 16px 0 rgba(24, 24, 27, 0.1);
+
   --ease: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
-
-  /* The player: true black, lifted by lightness alone. Orange appears only on data. */
-  --a-ground: #06090c;
-  --a-card: #10161a;
-  --a-raised: #1b2227;
-  --a-rule: #1c2329;
-  --a-line: #34404a;
-  --a-text: #f2f2f2;
-  --a-text2: #b4b4b4;
-  --a-text3: #949494;
-  --a-hue: #ff7a1f;
 }

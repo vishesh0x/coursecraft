@@ -1,12 +1,10 @@
-import { Fragment, useId, useMemo, useState, type ReactNode } from "react";
+import { Fragment, useId, useMemo, useState } from "react";
 import { KIND_LABEL, groupEntries } from "../lib/course";
 import { plural } from "../lib/format";
 import { SAMPLE_PATHS } from "../lib/sample";
-import { zigzag } from "../lib/shapes";
 import { ASSET_KINDS, type Chapter, type LessonUnit } from "../lib/types";
 
 const MAX_LINES = 300;
-const SLIP_CUT = zigzag(22, 12, { bottom: true });
 
 function kindsOf(lesson: LessonUnit): string {
   return ASSET_KINDS.filter((k) => lesson.byKind[k].length)
@@ -21,7 +19,7 @@ function flatten(chapter: Chapter, out: Chapter[] = []): Chapter[] {
 }
 
 /** The page's one live thing: the app's real grouping function, run on file names you can edit. */
-export function ContentsDemo({ intro }: { intro: ReactNode }) {
+export function ContentsDemo() {
   const id = useId();
   const [text, setText] = useState(SAMPLE_PATHS);
 
@@ -39,14 +37,12 @@ export function ContentsDemo({ intro }: { intro: ReactNode }) {
 
   return (
     <div className="demo">
-      <div className="demo-left">
-        {intro}
-        <div className="demo-input">
+      <div className="demo-input">
         <label htmlFor={id}>File names, one path per line</label>
         <textarea
           id={id}
           value={text}
-          rows={12}
+          rows={14}
           spellCheck={false}
           autoCapitalize="off"
           autoCorrect="off"
@@ -54,13 +50,12 @@ export function ContentsDemo({ intro }: { intro: ReactNode }) {
           onChange={(e) => setText(e.target.value)}
         />
         <p id={`${id}-note`}>
-          Up to {MAX_LINES} lines. Edit a name or add a file and the contents on the right change as you type.{" "}
+          Up to {MAX_LINES} lines.{" "}
           <button className="text-btn" onClick={() => setText(SAMPLE_PATHS)}>Reset to the sample</button>
         </p>
-        </div>
       </div>
 
-      <div className="slip" style={{ clipPath: SLIP_CUT }} aria-live="polite">
+      <div className="slip" aria-live="polite">
         <h3 className="slip-title">Contents</h3>
         {chapters.length ? (
           chapters.map((chapter) => (
@@ -70,7 +65,6 @@ export function ContentsDemo({ intro }: { intro: ReactNode }) {
                 {chapter.lessons.map((lesson) => (
                   <li key={lesson.id}>
                     <span className="slip-name">{lesson.title}</span>
-                    <span className="leader" aria-hidden="true" />
                     <span className="slip-kinds">{kindsOf(lesson)}</span>
                   </li>
                 ))}

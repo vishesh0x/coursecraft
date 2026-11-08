@@ -1,10 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router";
-import "@fontsource/eb-garamond/400.css";
-import "@fontsource/eb-garamond/400-italic.css";
-import "@fontsource/eb-garamond/500.css";
-import "@fontsource/eb-garamond/500-italic.css";
+import { BrowserRouter, MemoryRouter } from "react-router";
+import "@fontsource-variable/plus-jakarta-sans/index.css";
+import "@fontsource-variable/inter/index.css";
 import "./styles/tokens.css";
 import "./styles/site.css";
 import "./styles/app.css";
@@ -18,14 +16,17 @@ document.documentElement.classList.add("js");
 const root = document.getElementById("root");
 if (!root) throw new Error("Missing #root");
 
+// The hosted preview lives at an arbitrary URL, so it routes in memory. Production uses real paths.
+const Router = import.meta.env.VITE_MEMORY_ROUTER ? MemoryRouter : BrowserRouter;
+
 createRoot(root).render(
   <StrictMode>
     <ErrorBoundary>
-      <BrowserRouter>
+      <Router>
         <CourseProvider>
           <App />
         </CourseProvider>
-      </BrowserRouter>
+      </Router>
     </ErrorBoundary>
   </StrictMode>,
 );

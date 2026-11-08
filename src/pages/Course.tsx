@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router";
 import { ChapterTree } from "../components/ChapterTree";
 import { MediaViewer } from "../components/MediaViewer";
+import { DocPage } from "../components/DocPage";
+import { LogoMark } from "../components/Stickers";
 import { SiteFooter, SiteHeader } from "../components/Site";
 import { KIND_LABEL, preferredAsset } from "../lib/course";
 import { formatBytes, formatTime, plural } from "../lib/format";
@@ -99,7 +101,7 @@ function Workspace({ course, initialSession }: { course: Course; initialSession:
 
       <aside className="side" data-open={navOpen} aria-label="Course navigation">
         <div className="side-brand">
-          <Link to="/" className="wordmark" aria-label="Coursecraft home">Coursecraft</Link>
+          <Link to="/" className="brand" aria-label="Coursecraft home"><LogoMark /><span>Coursecraft</span></Link>
           <button className="icon-btn mobile-only" aria-label="Close contents" onClick={() => setNavOpen(false)}>×</button>
         </div>
 
@@ -246,18 +248,14 @@ export default function CoursePage() {
     return (
       <>
         <SiteHeader />
-        <main className="doc-page" id="main">
-          <article className="sheet">
-            <h1>No course is open</h1>
-            <p>
-              Coursecraft never uploads your files, so a reload lets go of the folder. Open it again and your place in every
-              video comes back.
-            </p>
-            <p>
-              <button className="btn" onClick={() => void choose()}>Open a course folder</button>
-            </p>
-          </article>
-        </main>
+        <DocPage
+          title="No course is open"
+          lede="Coursecraft never uploads your files, so a reload lets go of the folder. Open it again and your place in every video comes back."
+        >
+          <p className="doc-actions">
+            <button className="pill pill-hi pill-lg" onClick={() => void choose()}>Open a course folder</button>
+          </p>
+        </DocPage>
         <SiteFooter />
       </>
     );

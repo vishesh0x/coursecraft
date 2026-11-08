@@ -1,18 +1,7 @@
 import { Link } from "react-router";
+import { DocPage as Page } from "../components/DocPage";
 import { usePageMeta } from "../lib/usePageMeta";
 import { useCourses } from "../state/CourseContext";
-
-function Page({ title, lede, children }: { title: string; lede: string; children: React.ReactNode }) {
-  return (
-    <main className="doc-page" id="main">
-      <article className="sheet">
-        <h1>{title}</h1>
-        <p className="doc-lede">{lede}</p>
-        {children}
-      </article>
-    </main>
-  );
-}
 
 export function HowItWorksPage() {
   usePageMeta("How Coursecraft reads a folder · Coursecraft");

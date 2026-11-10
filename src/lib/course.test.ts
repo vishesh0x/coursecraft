@@ -48,6 +48,8 @@ describe("groupEntries", () => {
 describe("kinds", () => {
   it("detects by extension, with a few well-known extensionless names", () => {
     expect(detectKind("mp4")).toBe("video");
+    expect(detectKind("mp3")).toBe("audio");
+    expect(detectKind("m4a")).toBe("audio");
     expect(detectKind("py")).toBe("text");
     expect(detectKind("", "README")).toBe("text");
     expect(detectKind("exe")).toBe("other");
@@ -56,7 +58,8 @@ describe("kinds", () => {
     expect(isIgnored("a.part")).toBe(true);
     expect(isIgnored("lesson.mp4")).toBe(false);
   });
-  it("prefers video, then documents", () => {
+  it("prefers video, then audio, then documents", () => {
+    expect(preferredAsset(group("A/X.pdf", "A/X.mp3").lessons[0])?.kind).toBe("audio");
     const [lesson] = group("A/X.md", "A/X.pdf", "A/X.mp4").lessons;
     expect(preferredAsset(lesson)?.kind).toBe("video");
   });

@@ -1,9 +1,11 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { lazy, Suspense, useEffect, useRef, useState, type ReactNode } from "react";
 import { readCourseFile } from "../lib/course";
 import { errorMessage, formatBytes, formatTime } from "../lib/format";
 import { createSafeHtml } from "../lib/safeHtml";
 import { srtToVtt } from "../lib/subtitles";
 import type { CourseFile, PlaybackSample, VideoProgress } from "../lib/types";
+
+const PdfViewer = lazy(() => import("./PdfViewer"));
 
 const MAX_TEXT = 2 * 1024 * 1024;
 const MAX_HTML = 8 * 1024 * 1024;
@@ -82,8 +84,9 @@ interface VideoProps {
 
 const SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
 
-function VideoPlayer({ url, asset, subtitles, initialProgress, autoplay, onSample, onEnded, onFlush }: VideoProps) {
-  const video = useRef<HTMLVideoElement>(null);
+function TimedPlayer({ url, asset, subtitles, initialProgress, autoplay, onSample, onEnded, onFlush }: VideoProps) {
+  const video = useRef<HTMLMediaElement>(null);
+  const isAudio = asset.kind === "audio";
   const resumeAt = useRef(initialProgress?.position ?? 0);
   const last = useRef<{ time: number; wall: number } | null>(null);
   const [speed, setSpeed] = useState(1);
@@ -91,7 +94,7 @@ function VideoPlayer({ url, asset, subtitles, initialProgress, autoplay, onSampl
   const [failed, setFailed] = useState(false);
 
   /** Counts only time actually played: seeking and long stalls add nothing. */
-  function sample(el: HTMLVideoElement): void {
+  function sample(el: HTMLMediaElement): void {
     const now = performance.now();
     const before = last.current;
     let delta = 0;
@@ -104,7 +107,7 @@ function VideoPlayer({ url, asset, subtitles, initialProgress, autoplay, onSampl
     onSample({ position: el.currentTime || 0, duration: Number.isFinite(el.duration) ? el.duration : 0, watchedDelta: delta });
   }
 
-  async function onMetadata(el: HTMLVideoElement): Promise<void> {
+  async function onMetadata(el: HTMLMediaElement): Promise<void> {
     const saved = resumeAt.current;
     if (saved > 0 && Number.isFinite(el.duration)) {
       // A finished video starts over instead of resuming on its last frame.
@@ -119,14 +122,16 @@ function VideoPlayer({ url, asset, subtitles, initialProgress, autoplay, onSampl
 
   return (
     <div className="video-shell">
-      <video
-        ref={video}
-        src={url}
-        controls
-        playsInline
-        preload="metadata"
-        aria-label={asset.name}
-        onLoadedMetadata={(e) => void onMetadata(e.currentTarget)}
+{isAudio ? (
+        <div className="audio-stage">
+          <p className="audio-title">{asset.baseName}</p>
+          <audio
+            ref={video as React.RefObject<HTMLAudioElement>}
+            src={url}
+            controls
+            preload="metadata"
+            aria-label={asset.name}
+            onLoadedMetadata={(e) => void onMetadata(e.currentTarget)}
         onPlay={(e) => { last.current = { time: e.currentTarget.currentTime, wall: performance.now() }; }}
         onTimeUpdate={(e) => sample(e.currentTarget)}
         onSeeking={() => { last.current = null; }}
@@ -134,14 +139,33 @@ function VideoPlayer({ url, asset, subtitles, initialProgress, autoplay, onSampl
         onPause={(e) => { sample(e.currentTarget); onFlush(); }}
         onEnded={(e) => { sample(e.currentTarget); onEnded(); onFlush(); }}
         onError={() => setFailed(true)}
-      >
-        {subtitles.map((s, i) => <CaptionTrack key={s.id} asset={s} first={i === 0} onError={setNote} />)}
-      </video>
+          />
+        </div>
+      ) : (
+        <video
+          ref={video as React.RefObject<HTMLVideoElement>}
+          src={url}
+          controls
+          playsInline
+          preload="metadata"
+          aria-label={asset.name}
+          onLoadedMetadata={(e) => void onMetadata(e.currentTarget)}
+        onPlay={(e) => { last.current = { time: e.currentTarget.currentTime, wall: performance.now() }; }}
+        onTimeUpdate={(e) => sample(e.currentTarget)}
+        onSeeking={() => { last.current = null; }}
+        onSeeked={(e) => sample(e.currentTarget)}
+        onPause={(e) => { sample(e.currentTarget); onFlush(); }}
+        onEnded={(e) => { sample(e.currentTarget); onEnded(); onFlush(); }}
+        onError={() => setFailed(true)}
+        >
+          {subtitles.map((s, i) => <CaptionTrack key={s.id} asset={s} first={i === 0} onError={setNote} />)}
+        </video>
+      )}
 
       <div className="player-bar">
         <span>
           {resumeLabel}
-          {subtitles.length > 0 && ` · ${subtitles.length} caption ${subtitles.length === 1 ? "track" : "tracks"}`}
+          {!isAudio && subtitles.length > 0 && ` · ${subtitles.length} caption ${subtitles.length === 1 ? "track" : "tracks"}`}
         </span>
         <label className="speed">
           Speed
@@ -160,13 +184,22 @@ function VideoPlayer({ url, asset, subtitles, initialProgress, autoplay, onSampl
 
       {failed && (
         <p className="notice" role="alert">
-          Your browser cannot play this file or its codecs. MKV and MOV support varies; mp4 with H.264 video and AAC audio
-          plays everywhere. The original file has not been touched.
+          Your browser cannot play this file or its codecs. {isAudio ? "mp3 and m4a play everywhere." : "MKV and MOV support varies; mp4 with H.264 video and AAC audio plays everywhere."} The original file has not been touched.
         </p>
       )}
       {note && <p className="notice" role="status">{note}</p>}
     </div>
   );
+}
+
+const OFFICE = /^(docx?|pptx?|xlsx?|odt|odp|ods|rtf|key|pages|numbers)$/;
+const ARCHIVE = /^(zip|rar|7z|tar|gz|tgz|bz2|xz)$/;
+
+/** Say why a file cannot be shown, and what to do, instead of leaving a blank panel. */
+function unsupportedReason(ext: string): string {
+  if (OFFICE.test(ext)) return "Word, PowerPoint, Excel and Keynote files cannot be previewed in a browser without sending them to a service, and Coursecraft never uploads anything. Use “Save file” and open it in your own app, or export it as a PDF to read it here.";
+  if (ARCHIVE.test(ext)) return "Archives cannot be opened here. Unpack it first, then open the unpacked folder as the course.";
+  return "It is part of the lesson, but Coursecraft cannot show this format. Use “Save file” to open it in another app.";
 }
 
 export interface MediaViewerProps {
@@ -198,13 +231,14 @@ export function MediaViewer(props: MediaViewerProps) {
   let body: ReactNode;
   switch (asset.kind) {
     case "video":
-      body = <VideoPlayer {...props} url={loaded.url} />;
+    case "audio":
+      body = <TimedPlayer {...props} url={loaded.url} />;
       break;
     case "pdf":
       body = (
-        <object className="doc-frame" data={loaded.url} type="application/pdf" aria-label={asset.name}>
-          <div className="viewer-state"><h2>No PDF viewer here</h2><p>Your browser cannot show PDFs inline. Use “Save file” below.</p></div>
-        </object>
+        <Suspense fallback={<div className="viewer-state" role="status"><p>Opening the PDF…</p></div>}>
+          <PdfViewer asset={asset} />
+        </Suspense>
       );
       break;
     case "html":
@@ -232,7 +266,12 @@ export function MediaViewer(props: MediaViewerProps) {
       );
       break;
     default:
-      body = <div className="viewer-state"><h2>No preview for this file</h2><p>It is part of the lesson, but Coursecraft cannot show this format.</p></div>;
+      body = (
+        <div className="viewer-state">
+          <h2>No preview for this file</h2>
+          <p>{unsupportedReason(asset.extension)}</p>
+        </div>
+      );
   }
 
   return (

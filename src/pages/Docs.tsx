@@ -16,7 +16,7 @@ export function HowItWorksPage() {
       <h2>Lessons</h2>
       <p>
         Files in the same folder that share a name, ignoring the extension, are one lesson. A lesson opens on its video if
-        it has one, then on a PDF, an HTML page, notes, an image, or whatever else it holds. Every file stays one tab away.
+        it has one, then on its audio, a PDF, an HTML page, notes, an image, or whatever else it holds. Every file stays one tab away.
       </p>
       <table>
         <caption>One lesson, called “Intro”</caption>
@@ -25,7 +25,8 @@ export function HowItWorksPage() {
           <tr><td><code>Intro.mp4</code></td><td>The video, played in the browser</td></tr>
           <tr><td><code>Intro.en.srt</code></td><td>English captions, converted as they load</td></tr>
           <tr><td><code>Intro.pt-BR.vtt</code></td><td>Portuguese captions, ready as they are</td></tr>
-          <tr><td><code>Intro.pdf</code></td><td>The slides, in the PDF viewer</td></tr>
+          <tr><td><code>Intro.mp3</code></td><td>Audio with the same resume and speed controls as video</td></tr>
+          <tr><td><code>Intro.pdf</code></td><td>The slides, drawn page by page with zoom</td></tr>
           <tr><td><code>Intro.py</code></td><td>Exercise code, as text</td></tr>
         </tbody>
       </table>
@@ -74,6 +75,13 @@ export function BrowsersPage() {
         and asks you to confirm access. Elsewhere Coursecraft uses the basic folder picker. Your progress still comes back,
         because a course is recognised by its folder name, file names, sizes and dates.
       </p>
+      <h2>PDFs, audio and other files</h2>
+      <p>
+        PDFs are drawn by Coursecraft itself, not by the browser’s own viewer, so they look the same on a phone as on a
+        laptop, with a page counter and zoom. Audio (mp3, m4a, wav, ogg, flac and similar) plays with the same resume
+        tracking as video. Word, PowerPoint, Excel and Keynote files cannot be previewed without sending them to a service,
+        which Coursecraft never does, so export them as PDF or use Save file to open them in your own app.
+      </p>
       <h2>Video formats</h2>
       <p>
         Coursecraft does not convert video. Your browser plays it, so what works is up to the browser. An mp4 file with
@@ -81,9 +89,22 @@ export function BrowsersPage() {
         the container and the codecs inside, and some will not play; the player says so and leaves the file alone.
       </p>
       <h2>Phones and tablets</h2>
+      <table>
+        <caption>Opening a course on a phone or tablet</caption>
+        <thead>
+          <tr><th scope="col">Device and browser</th><th scope="col">What you can open</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Android, Chrome 132 or newer, Edge, Samsung Internet</th><td>Whole folders, with chapters. Some system folders such as Downloads cannot be chosen; pick a folder inside them.</td></tr>
+          <tr><th scope="row">Android, Firefox</th><td>Individual files only</td></tr>
+          <tr><th scope="row">iPhone and iPad, any browser</th><td>Individual files only. Every iOS browser uses Apple’s engine, which does not offer folder access.</td></tr>
+        </tbody>
+      </table>
       <p>
-        Folder choosing on touch devices varies by system, and large courses suit a laptop better. Coursecraft’s layout
-        works on small screens, but a desktop browser is the supported way to open a folder.
+        Where only files can be chosen, select a lesson’s files together (the video, its captions, its slides) and
+        Coursecraft groups them by name as usual. Folders give chapters; a plain file selection gives a single list. You
+        will choose the files again each visit, and your progress comes back when the names, sizes and dates match.
+        Large courses are far easier on a laptop.
       </p>
       <p className="doc-end"><Link to="/how-it-works">How a folder becomes a course →</Link></p>
     </Page>
@@ -96,7 +117,8 @@ const POLICY: [string, string][] = [
   ["connect-src 'none'", "The page cannot make network requests: no fetch, no XMLHttpRequest, no WebSocket, no beacon."],
   ["img-src 'self' data: blob:", "Images come from the app itself or from your files, held in memory."],
   ["media-src 'self' blob:", "Videos and captions come from your files, held in memory."],
-  ["object-src blob:", "Lets the browser’s PDF viewer show a PDF from your folder."],
+  ["object-src 'none'", "No plug-ins or embedded objects. PDFs are drawn by Coursecraft itself rather than by a browser plug-in."],
+  ["worker-src 'self'", "Lets the PDF reader run in a background worker that ships with this site, and nothing else."],
   ["frame-src blob:", "Lets the sandboxed HTML preview show a page from your folder."],
   ["font-src 'self', style-src 'self'", "Typeface and styles are bundled with the app. Nothing loads from a font service."],
   ["form-action 'none', base-uri 'none'", "Nothing can be submitted anywhere or redirect where links point."],

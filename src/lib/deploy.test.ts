@@ -16,6 +16,8 @@ describe("deployment contract", () => {
     expect(headers).toContain("connect-src 'none'");
     expect(headers).toContain("script-src 'self'");
     expect(headers).toContain("frame-ancestors 'none'");
+    expect(headers).toContain("object-src 'none'");
+    expect(headers).toContain("worker-src 'self'");
     expect(headers).not.toMatch(/unsafe-(inline|eval)/);
   });
 });

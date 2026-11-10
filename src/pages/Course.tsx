@@ -50,7 +50,7 @@ function Workspace({ course, initialSession }: { course: Course; initialSession:
 
   const doneCount = course.lessons.filter((l) => session.completed[l.id]).length;
   const percent = course.lessons.length ? Math.round((doneCount / course.lessons.length) * 100) : 0;
-  const watched = course.files.reduce((t, f) => t + (f.kind === "video" ? session.videos[f.id]?.watchedSeconds ?? 0 : 0), 0);
+  const watched = course.files.reduce((t, f) => t + (f.kind === "video" || f.kind === "audio" ? session.videos[f.id]?.watchedSeconds ?? 0 : 0), 0);
 
   const select = useCallback((id: string, autoplay = false) => {
     const target = course.lessons.find((l) => l.id === id);
@@ -59,13 +59,13 @@ function Workspace({ course, initialSession }: { course: Course; initialSession:
     flush();
     setLessonId(id);
     setAssetId(first?.id ?? null);
-    setAutoplayNow(autoplay && first?.kind === "video");
+    setAutoplayNow(autoplay && (first?.kind === "video" || first?.kind === "audio"));
     setNavOpen(false);
     update((p) => ({ ...p, activeLessonId: id, activeAssetId: first?.id ?? null }));
   }, [course.lessons, flush, update]);
 
   function onSample(sample: PlaybackSample): void {
-    if (!asset || asset.kind !== "video") return;
+    if (!asset || (asset.kind !== "video" && asset.kind !== "audio")) return;
     const id = asset.id;
     update((p) => ({
       ...p,
@@ -223,7 +223,7 @@ function Workspace({ course, initialSession }: { course: Course; initialSession:
                 <label className="switch">
                   <input type="checkbox" checked={autoplayNext} onChange={(e) => setAutoplayNext(e.target.checked)} />
                   <span className="switch-track" aria-hidden="true" />
-                  <span>Play the next video automatically</span>
+                  <span>Play the next lesson automatically</span>
                 </label>
               </section>
             </>

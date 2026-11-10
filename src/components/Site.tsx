@@ -4,7 +4,7 @@ import { useCourses } from "../state/CourseContext";
 import { LogoMark } from "./Stickers";
 
 export function SiteHeader() {
-  const { choose, loading } = useCourses();
+  const { choose, mode, loading } = useCourses();
   return (
     <header className="nav-wrap">
       <div className="nav">
@@ -18,8 +18,8 @@ export function SiteHeader() {
           <NavLink to="/privacy">Privacy</NavLink>
         </nav>
         <button className="pill pill-ink" disabled={loading} onClick={() => void choose()}>
-          <span className="long">Open a course folder</span>
-          <span className="short">Open folder</span>
+          <span className="long">{mode === "files" ? "Choose course files" : "Open a course folder"}</span>
+          <span className="short">{mode === "files" ? "Choose files" : "Open folder"}</span>
         </button>
       </div>
     </header>
@@ -47,7 +47,7 @@ export function SiteFooter() {
           <Link to="/privacy">Privacy and security</Link>
           <a href="/.well-known/security.txt">Report a vulnerability</a>
         </nav>
-        <p className="foot-credits">© 2026 Coursecraft, open source under the MIT licence. Set in Plus Jakarta Sans and Inter, SIL Open Font Licence.</p>
+        <p className="foot-credits">© 2026 Coursecraft, open source under the MIT licence. Set in Plus Jakarta Sans and Inter (SIL Open Font Licence). PDFs drawn with pdf.js (Apache 2.0).</p>
       </div>
     </footer>
   );

@@ -1,4 +1,4 @@
-export const ASSET_KINDS = ["video", "subtitle", "pdf", "html", "text", "image", "other"] as const;
+export const ASSET_KINDS = ["video", "audio", "subtitle", "pdf", "html", "text", "image", "other"] as const;
 export type AssetKind = (typeof ASSET_KINDS)[number];
 
 export type FileSource =

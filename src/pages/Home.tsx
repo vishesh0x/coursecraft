@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { ContentsDemo } from "../components/ContentsSheet";
 import { HeroPlayer } from "../components/HeroPlayer";
 import { Check, FolderSticker, PlaySticker } from "../components/Stickers";
+import { pickerNote } from "../lib/capability";
 import { formatBytes, plural } from "../lib/format";
 import type { CourseRecord } from "../lib/types";
 import { usePageMeta } from "../lib/usePageMeta";
@@ -11,7 +12,8 @@ import { useCourses } from "../state/CourseContext";
 const delay = (i: number) => ({ "--i": i }) as CSSProperties;
 
 function Hero() {
-  const { choose, loading, scanned, cancel } = useCourses();
+  const { choose, chooseFiles, mode, loading, scanned, cancel } = useCourses();
+  const note = pickerNote(mode);
   return (
     <section className="hero" aria-labelledby="hero-title">
       <h1 id="hero-title" className="rise" style={delay(0)}>
@@ -30,18 +32,24 @@ function Hero() {
         </p>
       ) : (
         <div className="pair rise" style={delay(2)}>
-          <button className="pill pill-hi pill-lg" onClick={() => void choose()}>Open a course folder</button>
+          <button className="pill pill-hi pill-lg" onClick={() => void choose()}>{mode === "files" ? "Choose course files" : "Open a course folder"}</button>
           <a className="pill pill-ink pill-lg" href="#how">See how it works</a>
         </div>
       )}
-      <div className="hero-stage rise" style={delay(3)}>
+      {note && !loading && (
+        <p className="hero-note rise" style={delay(3)}>
+          {note}
+          {mode !== "files" && <> <button className="text-btn" onClick={chooseFiles}>Choose individual files instead</button></>}
+        </p>
+      )}
+      <div className="hero-stage rise" style={delay(4)}>
         <HeroPlayer />
       </div>
     </section>
   );
 }
 
-const FILE_TYPES = ["mp4", "webm", "mov", "mkv", "srt", "vtt", "pdf", "html", "md", "txt", "py", "js", "json", "sql", "png", "jpg", "svg", "gif"];
+const FILE_TYPES = ["mp4", "webm", "mov", "mkv", "mp3", "m4a", "wav", "srt", "vtt", "pdf", "html", "md", "txt", "py", "js", "json", "sql", "png", "jpg", "svg", "gif"];
 
 function Opens() {
   return (
@@ -127,7 +135,7 @@ function Features() {
       <div className="bento">
         <article className="tile tile-wide" data-reveal>
           <h3>One lesson, every file</h3>
-          <p>Video, captions, slides and exercises sit behind one set of tabs, so a lesson never ends up spread over six windows.</p>
+          <p>Video, audio, captions, slides and exercises sit behind one set of tabs, so a lesson never ends up spread over six windows.</p>
           <div className="mini-tabs" data-ui aria-hidden="true">
             <span data-on="true">Recursive descent.mp4</span><span>Recursive descent.pdf</span><span>Recursive descent.py</span><span>.en.srt</span>
           </div>
@@ -217,7 +225,7 @@ function Faq() {
 }
 
 function Close(): ReactNode {
-  const { choose, loading } = useCourses();
+  const { choose, mode, loading } = useCourses();
   return (
     <section className="close" aria-labelledby="close-title" data-reveal>
       <h2 id="close-title">
@@ -227,7 +235,7 @@ function Close(): ReactNode {
       </h2>
       <p>The first lesson waits where you left it, or at the beginning if you have not been here before.</p>
       <div className="pair">
-        <button className="pill pill-ink pill-lg" disabled={loading} onClick={() => void choose()}>Open a course folder</button>
+        <button className="pill pill-ink pill-lg" disabled={loading} onClick={() => void choose()}>{mode === "files" ? "Choose course files" : "Open a course folder"}</button>
         <Link className="pill pill-white pill-lg" to="/how-it-works">Read how it works</Link>
       </div>
     </section>

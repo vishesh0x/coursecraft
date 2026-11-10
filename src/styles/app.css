@@ -186,3 +186,15 @@
   .switch-track::after, .chapter-caret { transition: none; }
   .hp-pane { filter: none; transition: opacity 120ms ease; }
 }
+
+/* Audio and PDF viewers ------------------------------------------------------------------------ */
+.audio-stage { display: grid; gap: 14px; padding: 28px; border-radius: 20px; background: var(--canvas); }
+.audio-title { font-family: var(--display); font-size: 1.25rem; font-weight: 800; letter-spacing: -0.04em; overflow-wrap: anywhere; }
+.audio-stage audio { width: 100%; }
+.pdf { display: flex; flex-direction: column; gap: 10px; }
+.pdf-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 2px 4px; color: var(--muted); font-size: 0.9375rem; font-variant-numeric: tabular-nums; }
+.pdf-zoom { display: inline-flex; gap: 6px; }
+.pdf-zoom .btn-outline { min-width: 40px; padding: 0 14px; font-size: 1.125rem; }
+.pdf-scroll { display: flex; flex-direction: column; align-items: center; gap: 12px; height: min(78vh, 920px); padding: 12px; overflow: auto; border-radius: 20px; background: var(--tone); -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+.pdf-page { flex: none; margin-inline: auto; overflow: hidden; border-radius: 4px; background: #fff; }
+.pdf-page canvas { display: block; }

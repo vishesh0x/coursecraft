@@ -14,6 +14,7 @@ This is a ground-up redesign and rebuild of the original Vite + React prototype.
 | Build | Vite |
 | Type | Plus Jakarta Sans and Inter (variable), self-hosted via `@fontsource-variable`, so the CSP can stay closed |
 | Storage | IndexedDB (course records, folder handles, progress) |
+| PDFs | pdf.js (Apache-2.0), loaded only when a PDF is opened, drawn page by page so phones show every page |
 | Hosting | Cloudflare Workers with Static Assets (`wrangler.jsonc`) |
 | Tests | Vitest (grouping, captions, storage validation, route and header contract, render smoke tests) |
 

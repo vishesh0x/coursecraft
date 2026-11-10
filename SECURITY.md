@@ -17,7 +17,7 @@ contents of that folder and the integrity of the page that reads them.
 | Script injection via the app | No `dangerouslySetInnerHTML`, no `eval`, no inline scripts; CSP `script-src 'self'`, no `unsafe-inline`/`unsafe-eval`. |
 | Malicious HTML file inside a course | Stripped of scripts, frames, forms, links and handlers, then shown in an `iframe sandbox=""` (unique origin, no scripts) with its own CSP. See `src/lib/safeHtml.ts`. |
 | Malicious SVG | Shown through `<img>`, which never runs script. |
-| PDF | Rendered by the browser's PDF viewer in an `<object>`; `object-src blob:` only. |
+| PDF | Drawn onto canvases by pdf.js in a same-origin worker (`worker-src 'self'`); no browser plug-in, no `eval`, `object-src 'none'`. The worker cannot make requests (`connect-src 'none'`). |
 | Clickjacking / embedding | `frame-ancestors 'none'`. |
 | Tampered or corrupt stored progress | Everything read from IndexedDB is validated and clamped (`normalizeSession`). |
 | Huge or hostile folders | Capped at 25,000 files and 32 levels deep; text previews capped at 2 MB, HTML at 8 MB; scan can be cancelled. |

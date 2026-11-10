@@ -3,6 +3,7 @@ import {
   type ChangeEvent, type ReactNode,
 } from "react";
 import { useNavigate } from "react-router";
+import { detectPickerEnv, pickerMode, type PickerMode } from "../lib/capability";
 import { scanDirectory, scanFileList } from "../lib/course";
 import { storage } from "../lib/db";
 import { errorMessage } from "../lib/format";
@@ -15,12 +16,13 @@ interface CourseApi {
   history: CourseRecord[];
   loading: boolean;
   scanned: number;
-  nativePicker: boolean;
+  mode: PickerMode;
   notice: string;
   dismissNotice: () => void;
   notify: (message: string) => void;
   choose: () => Promise<void>;
   chooseCompat: () => void;
+  chooseFiles: () => void;
   reopen: (record: CourseRecord) => Promise<void>;
   forget: (record: CourseRecord) => Promise<void>;
   unload: () => void;
@@ -45,11 +47,12 @@ export function CourseProvider({ children }: { children: ReactNode }) {
   const [scanned, setScanned] = useState(0);
   const [notice, setNotice] = useState("");
 
-  const input = useRef<HTMLInputElement>(null);
+  const folderInput = useRef<HTMLInputElement>(null);
+  const filesInput = useRef<HTMLInputElement>(null);
   const scan = useRef<AbortController | null>(null);
   const alive = useRef(true);
 
-  const nativePicker = typeof window.showDirectoryPicker === "function" && window.isSecureContext;
+  const mode = useMemo(() => pickerMode(detectPickerEnv()), []);
 
   const notify = useCallback((message: string) => setNotice(message), []);
   const dismissNotice = useCallback(() => setNotice(""), []);
@@ -66,8 +69,8 @@ export function CourseProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     alive.current = true;
     void refresh();
-    input.current?.setAttribute("webkitdirectory", "");
-    input.current?.setAttribute("directory", "");
+    folderInput.current?.setAttribute("webkitdirectory", "");
+    folderInput.current?.setAttribute("directory", "");
     return () => { alive.current = false; scan.current?.abort(); };
   }, [refresh]);
 
@@ -145,18 +148,24 @@ export function CourseProvider({ children }: { children: ReactNode }) {
     }
   }, [navigate, notify, refresh]);
 
-  const chooseCompat = useCallback(() => input.current?.click(), []);
+  const chooseFiles = useCallback(() => filesInput.current?.click(), []);
+  const chooseCompat = useCallback(() => (mode === "files" ? filesInput.current : folderInput.current)?.click(), [mode]);
 
   const choose = useCallback(async () => {
-    if (!nativePicker) return chooseCompat();
+    if (mode !== "native") return chooseCompat();
     try {
       const handle = await window.showDirectoryPicker({ mode: "read", id: "coursecraft-course" });
       await load({ type: "handle", handle });
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") return;
+      // Browsers refuse the folder picker in some places (a frame, a policy). Fall back instead of stopping.
+      if (error instanceof DOMException && error.name === "SecurityError") {
+        notify("This browser would not open its folder picker here, so choose the course from the file list instead.");
+        return chooseCompat();
+      }
       notify(`Folder selection failed: ${errorMessage(error)}`);
     }
-  }, [chooseCompat, load, nativePicker, notify]);
+  }, [chooseCompat, load, mode, notify]);
 
   const reopen = useCallback(async (record: CourseRecord) => {
     if (!record.handle) {
@@ -198,13 +207,14 @@ export function CourseProvider({ children }: { children: ReactNode }) {
   };
 
   const api = useMemo<CourseApi>(
-    () => ({ active, history, loading, scanned, nativePicker, notice, dismissNotice, notify, choose, chooseCompat, reopen, forget, unload, cancel }),
-    [active, history, loading, scanned, nativePicker, notice, dismissNotice, notify, choose, chooseCompat, reopen, forget, unload, cancel],
+    () => ({ active, history, loading, scanned, mode, notice, dismissNotice, notify, choose, chooseCompat, chooseFiles, reopen, forget, unload, cancel }),
+    [active, history, loading, scanned, mode, notice, dismissNotice, notify, choose, chooseCompat, chooseFiles, reopen, forget, unload, cancel],
   );
 
   return (
     <Context.Provider value={api}>
-      <input ref={input} className="visually-hidden" type="file" multiple tabIndex={-1} aria-label="Choose a course folder" onChange={onCompat} />
+      <input ref={folderInput} className="visually-hidden" type="file" multiple tabIndex={-1} aria-label="Choose a course folder" onChange={onCompat} />
+      <input ref={filesInput} className="visually-hidden" type="file" multiple tabIndex={-1} aria-label="Choose course files" onChange={onCompat} />
       {children}
     </Context.Provider>
   );

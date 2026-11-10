@@ -19,6 +19,7 @@ const JUNK = /^(\.ds_store|thumbs\.db|desktop\.ini|\._.*)$/i;
 
 const EXTENSIONS: Record<Exclude<AssetKind, "other">, Set<string>> = {
   video: new Set(["mp4", "mkv", "webm", "mov", "m4v", "ogv"]),
+  audio: new Set(["mp3", "m4a", "aac", "wav", "ogg", "oga", "opus", "flac", "weba"]),
   subtitle: new Set(["srt", "vtt"]),
   pdf: new Set(["pdf"]),
   html: new Set(["html", "htm"]),
@@ -31,13 +32,14 @@ const EXTENSIONS: Record<Exclude<AssetKind, "other">, Set<string>> = {
 
 const MIME: Record<string, string> = {
   mp4: "video/mp4", m4v: "video/mp4", mkv: "video/x-matroska", webm: "video/webm", mov: "video/quicktime",
-  ogv: "video/ogg", vtt: "text/vtt", srt: "application/x-subrip", pdf: "application/pdf", html: "text/html",
+  ogv: "video/ogg", mp3: "audio/mpeg", m4a: "audio/mp4", aac: "audio/aac", wav: "audio/wav", ogg: "audio/ogg", oga: "audio/ogg",
+  opus: "audio/ogg", flac: "audio/flac", weba: "audio/webm", vtt: "text/vtt", srt: "application/x-subrip", pdf: "application/pdf", html: "text/html",
   htm: "text/html", jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png", webp: "image/webp",
   svg: "image/svg+xml", gif: "image/gif", avif: "image/avif", bmp: "image/bmp",
 };
 
 export const KIND_LABEL: Record<AssetKind, string> = {
-  video: "video", subtitle: "captions", pdf: "pdf", html: "page", text: "notes", image: "image", other: "file",
+  video: "video", audio: "audio", subtitle: "captions", pdf: "pdf", html: "page", text: "notes", image: "image", other: "file",
 };
 
 export function detectKind(extension: string, name = ""): AssetKind {
@@ -219,7 +221,7 @@ export async function scanFileList(
 ): Promise<Course> {
   if (selected.length > MAX_FILES) throw new Error(`That selection holds more than ${MAX_FILES.toLocaleString()} files. Pick the course folder itself.`);
   const entries: FileEntry[] = [];
-  const rootName = selected[0]?.webkitRelativePath.split("/")[0] || "Local course";
+  const rootName = selected[0]?.webkitRelativePath.split("/")[0] || "Chosen files";
 
   for (let i = 0; i < selected.length; i++) {
     signal.throwIfAborted();
@@ -239,7 +241,7 @@ export async function scanFileList(
 
 export function preferredAsset(lesson: LessonUnit): CourseFile | undefined {
   const b = lesson.byKind;
-  return b.video[0] ?? b.pdf[0] ?? b.html[0] ?? b.text[0] ?? b.image[0] ?? b.subtitle[0] ?? b.other[0];
+  return b.video[0] ?? b.audio[0] ?? b.pdf[0] ?? b.html[0] ?? b.text[0] ?? b.image[0] ?? b.subtitle[0] ?? b.other[0];
 }
 
 /** Sample data for the marketing pages, built by the same function the app uses. */

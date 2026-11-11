@@ -86,7 +86,7 @@ src/styles/        tokens, site, app
 
 ## Before you ship
 
-- Replace `OWNER` in `public/.well-known/security.txt` and refresh its `Expires` date yearly.
+- `public/.well-known/security.txt` points at `github.com/vishesh0x/coursecraft`: create that repository (or change the URL) and turn on private vulnerability reporting, then refresh the file's `Expires` date yearly.
 - Add `og:image` and a sitemap once you have a domain (both need an absolute URL).
 
 ## Licence

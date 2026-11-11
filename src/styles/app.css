@@ -12,8 +12,8 @@
 .progress-block { padding: 16px 22px 4px; }
 .progress-line { display: flex; justify-content: space-between; align-items: baseline; color: var(--muted); font-size: 0.9375rem; }
 .progress-line strong { color: var(--ink); font-weight: 700; font-variant-numeric: tabular-nums; }
-.meter { height: 8px; margin-top: 8px; overflow: hidden; border-radius: var(--r-pill); background: #dedbd4; }
-.meter > span { display: block; height: 100%; border-radius: var(--r-pill); background: var(--hi); box-shadow: inset 0 0 0 1.5px var(--ink); /* taste-skill-ignore: the outline that makes the highlighter bar */ }
+.meter { height: 8px; margin-top: 8px; overflow: hidden; border-radius: var(--r-pill); background: var(--track); }
+.meter > span { display: block; height: 100%; border-radius: var(--r-pill); background: var(--hi); box-shadow: inset 0 0 0 1.5px var(--meter-line); /* taste-skill-ignore: the outline that makes the highlighter bar */ }
 .progress-block p { margin-top: 8px; color: var(--muted); font-size: 0.9375rem; font-variant-numeric: tabular-nums; }
 .side-filters { display: grid; gap: 8px; padding: 16px 16px 8px; }
 .side-filters input, .side-filters select, .speed select, .hp-select {
@@ -35,8 +35,8 @@
 .chapter-count, .lesson-kind { flex: none; color: var(--muted); font-size: 0.8125rem; font-variant-numeric: tabular-nums; }
 .chapter-caret { flex: none; width: 7px; height: 7px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; rotate: -45deg; transition: rotate 160ms var(--ease); }
 .chapter-caret[data-open="true"] { rotate: 45deg; }
-.lesson-dot { flex: none; width: 10px; height: 10px; border: 1.5px solid #bdbab2; border-radius: 50%; transition: background-color 180ms ease, border-color 180ms ease; }
-.lesson-dot[data-done="true"] { background: var(--hi); border-color: var(--ink); }
+.lesson-dot { flex: none; width: 10px; height: 10px; border: 1.5px solid var(--ring); border-radius: 50%; transition: background-color 180ms ease, border-color 180ms ease; }
+.lesson-dot[data-done="true"] { background: var(--hi); border-color: var(--meter-line); }
 .lesson-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .lesson-row[aria-current="true"] { background: var(--canvas); color: var(--ink); font-weight: 600; }
 .chapter-row:active, .lesson-row:active { background: var(--tone); }
@@ -56,15 +56,15 @@
   font-size: 0.9375rem; font-weight: 500; white-space: nowrap; transition: transform 160ms var(--ease), background-color 160ms ease;
 }
 .btn-outline { background: var(--canvas); color: var(--ink); }
-.btn-solid { background: var(--ink); color: #fff; }
+.btn-solid { background: var(--solid); color: var(--on-solid); }
 .btn-outline:active, .btn-solid:active { transform: scale(0.97); }
-.btn-outline[aria-pressed="true"] { background: var(--hi); }
+.btn-outline[aria-pressed="true"] { background: var(--hi); color: var(--on-hi); }
 .lesson-head .btn-outline, .lesson-nav .btn-outline { background: var(--card); }
-.lesson-head .btn-outline[aria-pressed="true"] { background: var(--hi); }
+.lesson-head .btn-outline[aria-pressed="true"] { background: var(--hi); color: var(--on-hi); }
 @media (hover: hover) and (pointer: fine) {
   .btn-outline:hover:not(:disabled) { background: var(--tone); }
-  .lesson-head .btn-outline:hover:not(:disabled), .lesson-nav .btn-outline:hover:not(:disabled) { background: #f8f7f4; }
-  .btn-solid:hover:not(:disabled) { background: #34343a; }
+  .lesson-head .btn-outline:hover:not(:disabled), .lesson-nav .btn-outline:hover:not(:disabled) { background: var(--hover-card); }
+  .btn-solid:hover:not(:disabled) { background: var(--solid-hover); }
 }
 .app .icon-btn { width: 40px; height: 40px; }
 
@@ -83,8 +83,8 @@
   transition: background-color 150ms ease, color 150ms ease, transform 160ms var(--ease);
 }
 .tab:active { transform: scale(0.97); }
-.tab[aria-pressed="true"], .tab[data-active="true"] { background: var(--ink); color: #fff; }
-@media (hover: hover) and (pointer: fine) { .tab:hover:not([aria-pressed="true"]) { background: #f8f7f4; } }
+.tab[aria-pressed="true"], .tab[data-active="true"] { background: var(--solid); color: var(--on-solid); }
+@media (hover: hover) and (pointer: fine) { .tab:hover:not([aria-pressed="true"]) { background: var(--hover-card); } }
 
 /* Viewers: a white card with the media inside it ----------------------------------------- */
 .viewer { padding: 10px; border-radius: 28px; background: var(--card); }
@@ -113,16 +113,16 @@
 
 .switch { position: relative; display: inline-flex; align-items: center; gap: 12px; min-height: 40px; color: var(--body); font-size: 0.9375rem; cursor: pointer; }
 .switch input { position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
-.switch-track { position: relative; flex: none; width: 44px; height: 26px; border-radius: var(--r-pill); background: #d6d3cb; transition: background-color 180ms ease; }
+.switch-track { position: relative; flex: none; width: 44px; height: 26px; border-radius: var(--r-pill); background: var(--track-2); transition: background-color 180ms ease; }
 .switch-track::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform 180ms var(--ease); }
-.switch input:checked + .switch-track { background: var(--ink); }
-.switch input:checked + .switch-track::after { transform: translateX(18px); }
+.switch input:checked + .switch-track { background: var(--solid); }
+.switch input:checked + .switch-track::after { transform: translateX(18px); background: var(--on-solid); }
 .switch input:focus-visible + .switch-track { outline: 3px solid var(--ink); outline-offset: 3px; }
 
 /* The picture of the player on the landing page ------------------------------------------------ */
 .hp { max-width: 1040px; margin: 0 auto; overflow: hidden; border-radius: 28px; background: var(--canvas); color: var(--ink); text-align: left; font-size: 1rem; line-height: 1.45; box-shadow: var(--lift-hero); /* taste-skill-ignore: the hero product floats */ }
 .hp-chrome { display: flex; align-items: center; gap: 8px; height: 46px; padding: 0 18px; background: var(--card); }
-.hp-chrome span { width: 12px; height: 12px; border-radius: 50%; background: #d9d6ce; }
+.hp-chrome span { width: 12px; height: 12px; border-radius: 50%; background: var(--chrome-dot); }
 .hp-chrome p { flex: 1; padding-right: 52px; text-align: center; color: var(--muted); font-size: 0.8125rem; }
 .hp-body { display: grid; grid-template-columns: 264px minmax(0, 1fr); gap: 12px; height: min(620px, 78svh); padding: 12px; }
 .hp-side { display: flex; flex-direction: column; min-height: 0; overflow: hidden; border-radius: 22px; background: var(--card); }
@@ -133,7 +133,7 @@
 .hp-head h2 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.045em; line-height: 1.1; }
 .hp-select { display: none; }
 .hp .btn-outline { background: var(--card); }
-.hp .btn-outline[aria-pressed="true"] { background: var(--hi); }
+.hp .btn-outline[aria-pressed="true"] { background: var(--hi); color: var(--on-hi); }
 .hp-viewer { flex: 1; display: flex; flex-direction: column; min-height: 0; padding: 10px; border-radius: 22px; }
 .hp-pane { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: auto; border-radius: 16px; transition: opacity 200ms var(--ease), filter 200ms var(--ease); }
 @starting-style { .hp-pane { opacity: 0; filter: blur(3px); } }

@@ -1,15 +1,41 @@
+/* Light is the default; a dark set follows the device's own setting. Every colour on the site is one of these roles. */
 :root {
-  /* A warm gray canvas, white cards that sit on it, near-black ink, and one highlighter yellow. */
+  color-scheme: light dark;
+
   --canvas: #f3f2ef;
   --card: #ffffff;
   --tone: #ebe9e4;
   --ink: #18181b;
   --body: #3d3d43;
   --muted: #6a6a72;
+  --hover-card: #f8f7f4;
+  --zebra: #faf9f7;
+
+  /* Yellow stays yellow in both modes, and anything on it stays dark. */
   --hi: #f5e642;
   --hi-press: #e9d82a;
-  --on-ink: #ffffff;
+  --on-hi: #18181b;
+
+  /* "Solid" controls: the black pill in light, the white pill in dark. */
+  --solid: #18181b;
+  --on-solid: #ffffff;
+  --solid-hover: #34343a;
+  --play: #f5e642;
+
+  /* Panels that are dark in both modes (privacy card, sandbox tile). */
+  --panel: #18181b;
+  --panel-2: #232327;
+  --on-panel: #ffffff;
   --on-ink-muted: #b9b9c0;
+
+  /* Data marks and chrome. */
+  --track: #dedbd4;
+  --track-2: #d6d3cb;
+  --ring: #bdbab2;
+  --chrome-dot: #d9d6ce;
+  --meter-line: #18181b;
+  --stage-bg: #ecebe7;
+  --dots: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Ccircle cx='2' cy='2' r='1.3' fill='%23d3d0c8'/%3E%3C/svg%3E");
 
   --display: "Plus Jakarta Sans Variable", "Helvetica Neue", Arial, system-ui, sans-serif;
   --sans: "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -35,4 +61,38 @@
   --ease: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  --a-hue: var(--hi);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --canvas: #0f0f11;
+    --card: #1a1a1e;
+    --tone: #26262b;
+    --ink: #f4f4f5;
+    --body: #cfcfd6;
+    --muted: #9d9da6;
+    --hover-card: #222227;
+    --zebra: #1e1e22;
+
+    --solid: #f4f4f5;
+    --on-solid: #18181b;
+    --solid-hover: #dcdce0;
+    --play: #18181b;
+
+    --panel: #232328;
+    --panel-2: #2d2d34;
+
+    --track: #3a3a41;
+    --track-2: #4a4a52;
+    --ring: #55555d;
+    --chrome-dot: #3a3a41;
+    --meter-line: transparent;
+    --stage-bg: #151518;
+    --dots: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Ccircle cx='2' cy='2' r='1.3' fill='%2328282d'/%3E%3C/svg%3E");
+
+    --lift-nav: 0 10px 14px -6px rgba(0, 0, 0, 0.6);
+    --lift-hero: 0 120px 48px 0 rgba(0, 0, 0, 0.02), 0 67px 40px 0 rgba(0, 0, 0, 0.12), 0 30px 30px 0 rgba(0, 0, 0, 0.22), 0 7px 16px 0 rgba(0, 0, 0, 0.3);
+  }
 }

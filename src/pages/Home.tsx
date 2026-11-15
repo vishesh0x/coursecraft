@@ -22,8 +22,7 @@ function Hero() {
         get a <span className="mark">course.</span><PlaySticker />
       </h1>
       <p className="hero-sub rise" style={delay(1)}>
-        Coursecraft plays the course already on your disk, one lesson at a time, and remembers where you stopped.
-        Nothing is uploaded.
+        Play the course on your disk. Nothing is uploaded.
       </p>
       {loading ? (
         <p className="hero-scan rise" role="status" aria-live="polite" style={delay(2)}>
@@ -54,7 +53,7 @@ const FILE_TYPES = ["mp4", "webm", "mov", "mkv", "mp3", "m4a", "wav", "srt", "vt
 function Opens() {
   return (
     <section className="opens" aria-labelledby="opens-title">
-      <p id="opens-title" data-reveal>Opens the files already in your course folder</p>
+      <h2 id="opens-title" data-reveal>Opens the files already in your course folder</h2>
       <ul data-reveal style={delay(1)}>
         {FILE_TYPES.map((t) => <li key={t}>{t}</li>)}
         <li className="more">and about forty more as plain text</li>
@@ -135,14 +134,14 @@ function Features() {
       <div className="bento">
         <article className="tile tile-wide" data-reveal>
           <h3>One lesson, every file</h3>
-          <p>Video, audio, captions, slides and exercises sit behind one set of tabs, so a lesson never ends up spread over six windows.</p>
+          <p>Video, audio, captions, slides and exercises sit behind one set of tabs.</p>
           <div className="mini-tabs" data-ui aria-hidden="true">
             <span data-on="true">Recursive descent.mp4</span><span>Recursive descent.pdf</span><span>Recursive descent.py</span><span>.en.srt</span>
           </div>
         </article>
         <article className="tile tile-hi" data-reveal style={delay(1)}>
           <h3>Resumes where you stopped</h3>
-          <p>Position, finished lessons and time actually watched, kept per course.</p>
+          <p>Position, finished lessons and time watched, kept per course.</p>
           <div className="mini-resume" data-ui aria-hidden="true">
             <strong>12:40</strong><span>of 33:12</span>
             <div className="meter"><span style={{ width: "38%" }} /></div>
@@ -150,12 +149,12 @@ function Features() {
         </article>
         <article className="tile" data-reveal>
           <h3>Captions match by name</h3>
-          <p>srt or vtt beside the video, in any language. Suffixes like .en and .de are matched, and srt is converted as it loads.</p>
+          <p>srt or vtt beside the video, matched by name in any language.</p>
           <pre className="mini-code" aria-hidden="true"><code>{"Lesson.mp4\nLesson.en.srt  → English\nLesson.de.srt  → Deutsch"}</code></pre>
         </article>
         <article className="tile tile-ink tile-wide" data-reveal style={delay(1)}>
           <h3>HTML previews run in a sandbox</h3>
-          <p>An HTML page from your course shows with scripts, links, frames and outside requests switched off. It cannot reach the app or your files.</p>
+          <p>HTML pages show with scripts, links and outside requests switched off.</p>
           <pre className="mini-code" aria-hidden="true"><code>{'<iframe sandbox="" src="blob:…">\n  scripts: off · forms: off · links: off'}</code></pre>
         </article>
       </div>

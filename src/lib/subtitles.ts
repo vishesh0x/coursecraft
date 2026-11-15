@@ -1,3 +1,5 @@
+const CUE_SETTING = /^(?:align|position|size|line|vertical):\S+$/;
+
 /** Convert SubRip (or pass through WebVTT) so <track> can read it. */
 export function srtToVtt(input: string): string {
   const normalized = input.replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n").trim();
@@ -17,7 +19,8 @@ export function srtToVtt(input: string): string {
     if (at === -1) continue;
     const match = lines[at].match(timing)!;
     const settings = match[3].trim();
-    const kept = /^(?:(?:align|position|size|line|vertical):\S+\s*)+$/.test(settings) ? ` ${settings}` : "";
+    // Checked token by token. A single pattern with nested repeats backtracks exponentially on a crafted line.
+    const kept = settings && settings.split(/\s+/).every((token) => CUE_SETTING.test(token)) ? ` ${settings}` : "";
     const body = lines.slice(at + 1).join("\n");
     if (!body.trim()) continue;
     cues.push(`${fix(match[1])} --> ${fix(match[2])}${kept}\n${body}`);

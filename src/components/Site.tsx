@@ -2,6 +2,7 @@ import { useEffect, type ReactNode } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router";
 import { useCourses } from "../state/CourseContext";
 import { LogoMark } from "./Stickers";
+import { ThemeToggle } from "./ThemeToggle";
 
 export function SiteHeader() {
   const { choose, mode, loading } = useCourses();
@@ -17,6 +18,7 @@ export function SiteHeader() {
           <NavLink to="/browsers">Browsers</NavLink>
           <NavLink to="/privacy">Privacy</NavLink>
         </nav>
+        <ThemeToggle />
         <button className="pill pill-ink" disabled={loading} onClick={() => void choose()}>
           <span className="long">{mode === "files" ? "Choose course files" : "Open a course folder"}</span>
           <span className="short">{mode === "files" ? "Choose files" : "Open folder"}</span>

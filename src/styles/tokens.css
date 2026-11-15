@@ -25,10 +25,22 @@
   /* Panels that are dark in both modes (privacy card, sandbox tile). */
   --panel: #18181b;
   --panel-2: #232327;
-  --on-panel: #ffffff;
+  --on-panel: #f6f5f2;
   --on-ink-muted: #b9b9c0;
 
   /* Data marks and chrome. */
+  --edge: #85858d;
+  --paper: #fcfbf8;
+  --media: #101012;
+  --media-deep: #060607;
+  --on-media: #f4f4f5;
+  --on-media-muted: #c9c9d0;
+  --on-hi-soft: #3a3700;
+  --scrim: rgba(24, 24, 27, 0.5);
+  --caption-bg: rgba(6, 6, 7, 0.8);
+  --media-track: #3b3b41;
+  --on-hi-track: rgba(24, 24, 27, 0.16);
+  --toast-shadow: rgba(24, 24, 27, 0.3);
   --track: #dedbd4;
   --track-2: #d6d3cb;
   --ring: #bdbab2;
@@ -66,7 +78,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --canvas: #0f0f11;
     --card: #1a1a1e;
     --tone: #26262b;
@@ -84,6 +96,7 @@
     --panel: #232328;
     --panel-2: #2d2d34;
 
+    --edge: #75757d;
     --track: #3a3a41;
     --track-2: #4a4a52;
     --ring: #55555d;
@@ -94,5 +107,41 @@
 
     --lift-nav: 0 10px 14px -6px rgba(0, 0, 0, 0.6);
     --lift-hero: 0 120px 48px 0 rgba(0, 0, 0, 0.02), 0 67px 40px 0 rgba(0, 0, 0, 0.12), 0 30px 30px 0 rgba(0, 0, 0, 0.22), 0 7px 16px 0 rgba(0, 0, 0, 0.3);
+  
   }
 }
+
+:root[data-theme="dark"] {
+    --canvas: #0f0f11;
+    --card: #1a1a1e;
+    --tone: #26262b;
+    --ink: #f4f4f5;
+    --body: #cfcfd6;
+    --muted: #9d9da6;
+    --hover-card: #222227;
+    --zebra: #1e1e22;
+
+    --solid: #f4f4f5;
+    --on-solid: #18181b;
+    --solid-hover: #dcdce0;
+    --play: #18181b;
+
+    --panel: #232328;
+    --panel-2: #2d2d34;
+
+    --edge: #75757d;
+    --track: #3a3a41;
+    --track-2: #4a4a52;
+    --ring: #55555d;
+    --chrome-dot: #3a3a41;
+    --meter-line: transparent;
+    --stage-bg: #151518;
+    --dots: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Ccircle cx='2' cy='2' r='1.3' fill='%2328282d'/%3E%3C/svg%3E");
+
+    --lift-nav: 0 10px 14px -6px rgba(0, 0, 0, 0.6);
+    --lift-hero: 0 120px 48px 0 rgba(0, 0, 0, 0.02), 0 67px 40px 0 rgba(0, 0, 0, 0.12), 0 30px 30px 0 rgba(0, 0, 0, 0.22), 0 7px 16px 0 rgba(0, 0, 0, 0.3);
+  
+}
+
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }

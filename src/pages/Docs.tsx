@@ -50,7 +50,7 @@ export function HowItWorksPage() {
         counts only seconds that actually played, so skipping ahead adds nothing. A video you finished starts again from the
         beginning instead of resting on its last frame.
       </p>
-      <p className="doc-end"><Link to="/browsers">Which browsers work →</Link></p>
+      <p className="doc-end"><Link to="/browsers">See which browsers work</Link></p>
     </Page>
   );
 }
@@ -106,7 +106,7 @@ export function BrowsersPage() {
         will choose the files again each visit, and your progress comes back when the names, sizes and dates match.
         Large courses are far easier on a laptop.
       </p>
-      <p className="doc-end"><Link to="/how-it-works">How a folder becomes a course →</Link></p>
+      <p className="doc-end"><Link to="/how-it-works">Read how a folder becomes a course</Link></p>
     </Page>
   );
 }
@@ -134,7 +134,7 @@ export function PrivacyPage() {
       <p>
         In your browser’s own storage on this device: one record per course (its name, counts, size, when you last opened it
         and, where the browser allows, a handle to the folder) and its progress (video positions, finished lessons, time
-        watched). Nothing else. There are no cookies and no account. Forget a course in your library to remove its record, or
+        watched), and your light or dark choice if you use the toggle. Nothing else. There are no cookies and no account. Forget a course in your library to remove its record, or
         clear this site’s data in your browser to remove everything.
       </p>
 
@@ -175,7 +175,7 @@ export function PrivacyPage() {
         If you find a security issue, use the contact in <a href="/.well-known/security.txt">security.txt</a>. Please do not
         include a real course in a report.
       </p>
-      <p className="doc-end"><button className="text-btn" onClick={() => void choose()}>Open a course folder →</button></p>
+      <p className="doc-end"><button className="text-btn" onClick={() => void choose()}>Open a course folder</button></p>
     </Page>
   );
 }

@@ -16,10 +16,11 @@ contents of that folder and the integrity of the page that reads them.
 | The page sends course data somewhere | CSP `connect-src 'none'`, `default-src 'none'`, no third-party scripts, fonts or analytics (`public/_headers`). |
 | Script injection via the app | No `dangerouslySetInnerHTML`, no `eval`, no inline scripts; CSP `script-src 'self'`, no `unsafe-inline`/`unsafe-eval`. |
 | Malicious HTML file inside a course | Stripped of scripts, frames, forms, links and handlers, then shown in an `iframe sandbox=""` (unique origin, no scripts) with its own CSP. See `src/lib/safeHtml.ts`. |
-| Malicious SVG | Shown through `<img>`, which never runs script. |
+| Malicious SVG, XML or XHTML course file opened in its own tab | Files never get a MIME type a browser will run: only inert types (video, audio, raster images, PDF, plain text) keep theirs, every text file is `text/plain`, everything else is `application/octet-stream`, and SVGs are shown through a `data:` URL (opaque origin). `src/lib/blob.ts`. A blob document opened on its own is not covered by the page's CSP, which is why this matters. |
 | PDF | Drawn onto canvases by pdf.js in a same-origin worker (`worker-src 'self'`); no browser plug-in, no `eval`, `object-src 'none'`. The worker cannot make requests (`connect-src 'none'`). |
 | Clickjacking / embedding | `frame-ancestors 'none'`. |
 | Tampered or corrupt stored progress | Everything read from IndexedDB is validated and clamped (`normalizeSession`). |
+| Crafted caption file | Cue settings are checked token by token (linear time); a regression test bounds the hostile input. A single nested-repeat regex used to block the tab for seconds. |
 | Huge or hostile folders | Capped at 25,000 files and 32 levels deep; text previews capped at 2 MB, HTML at 8 MB; scan can be cancelled. |
 | Folder modified by the app | The folder is requested with `mode: "read"`; nothing is written to it. |
 | MIME sniffing, referrer leaks, powerful APIs | `X-Content-Type-Options`, `Referrer-Policy: no-referrer`, a restrictive `Permissions-Policy`, COOP/CORP. |

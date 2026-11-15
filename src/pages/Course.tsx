@@ -4,6 +4,7 @@ import { ChapterTree } from "../components/ChapterTree";
 import { MediaViewer } from "../components/MediaViewer";
 import { DocPage } from "../components/DocPage";
 import { LogoMark } from "../components/Stickers";
+import { ThemeToggle } from "../components/ThemeToggle";
 import { SiteFooter, SiteHeader } from "../components/Site";
 import { KIND_LABEL, preferredAsset } from "../lib/course";
 import { formatBytes, formatTime, plural } from "../lib/format";
@@ -156,6 +157,7 @@ function Workspace({ course, initialSession }: { course: Course; initialSession:
             <strong title={course.name}>{course.name}</strong>
           </div>
           <div className="bar-right">
+            <ThemeToggle />
             <button className="btn-outline" onClick={() => void choose()}>Open another</button>
             <button className="btn-outline" onClick={unload}>Close course</button>
           </div>

@@ -78,6 +78,20 @@ describe("srtToVtt", () => {
   });
 });
 
+describe("srtToVtt on hostile input", () => {
+  it("does not backtrack on a crafted cue-settings line (a 280-byte line froze the tab for 10s before the fix)", () => {
+    const line = `1\n00:00:01,000 --> 00:00:02,000 ${"align:".repeat(60)} x\nText\n`;
+    const start = performance.now();
+    const vtt = srtToVtt(line);
+    expect(performance.now() - start).toBeLessThan(200);
+    expect(vtt).toContain("00:00:01.000 --> 00:00:02.000\nText");
+    expect(vtt).not.toContain("align:align:");
+  });
+  it("still keeps valid cue settings", () => {
+    expect(srtToVtt("1\n00:00:01,000 --> 00:00:02,000 align:start position:10%\nHi\n")).toContain("00:00:02.000 align:start position:10%");
+  });
+});
+
 describe("normalizeSession", () => {
   it("rejects non-objects and clamps bad numbers", () => {
     expect(normalizeSession("x", null)).toBeUndefined();

@@ -58,6 +58,8 @@ code, and "Folders become chapters" lets you edit file names and watch the conte
 "course." is the one signature device. The player itself uses the same system: a white sidebar card, pill tabs, the media
 in a white card, and yellow only on progress and finished lessons.
 
+The site follows the device's light or dark setting, and a toggle in the nav (and in the player bar) overrides it. The choice is the only thing stored outside the course data, under `coursecraft-theme`, and `public/theme.js` applies it before first paint so there is no flash.
+
 Motion follows a short list of rules: strong ease-out curves, 160ms press feedback on controls, hover effects only on
 real pointers, only transform, opacity and clip-path animated for entrances, and a reduced-motion fallback for all of it.
 

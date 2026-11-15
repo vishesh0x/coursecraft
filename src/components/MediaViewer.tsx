@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState, type ReactNode } from "react";
 import { readCourseFile } from "../lib/course";
 import { errorMessage, formatBytes, formatTime } from "../lib/format";
+import { safeBlobType, svgDataUrl } from "../lib/blob";
 import { createSafeHtml } from "../lib/safeHtml";
 import { srtToVtt } from "../lib/subtitles";
 import type { CourseFile, PlaybackSample, VideoProgress } from "../lib/types";
@@ -25,7 +26,12 @@ function useAsset(asset: CourseFile, mode: Mode): Result {
     (async () => {
       try {
         const file = await readCourseFile(asset);
-        let blob: Blob = file.slice(0, file.size, asset.mimeType);
+        if (mode === "binary" && asset.extension === "svg") {
+          if (file.size > MAX_TEXT) throw new Error("This SVG is over 2 MB, which is too large to show safely.");
+          if (!disposed) setResult({ loaded: { url: svgDataUrl(await file.text()) } });
+          return;
+        }
+        let blob: Blob = file.slice(0, file.size, safeBlobType(asset.kind, asset.mimeType));
         let text: string | undefined;
         let truncated = false;
 

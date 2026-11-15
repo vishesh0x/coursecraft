@@ -94,10 +94,6 @@ export function HeroPlayer() {
 
   return (
     <div className="hp" data-ui>
-      <div className="hp-chrome" aria-hidden="true">
-        <span /><span /><span />
-        <p>{SAMPLE_COURSE.name}</p>
-      </div>
       <div className="hp-body">
         <aside className="hp-side" aria-label="Sample course contents">
           <div className="hp-progress">

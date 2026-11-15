@@ -37,7 +37,7 @@ export function SiteFooter() {
             <LogoMark />
             <span>Coursecraft</span>
           </Link>
-          <p>Plays the course already on your disk. It runs in your browser tab, so there is no server for your course to be sent to.</p>
+          <p>Plays the course already on your disk, in your browser tab.</p>
         </div>
         <nav className="foot-col" aria-label="Learn more">
           <h2>Learn</h2>

@@ -1,3 +1,15 @@
+/* Hallmark · shape: kept · genre: modern-minimal · theme: brand · redesign: polish
+ * paper: oklch(95.5% 0.004 90) · accent: oklch(92% 0.18 105) · display: Plus Jakarta Sans · body: Inter · hero: Corridor · nav: floating card, wordmark left, links, one action · footer: one card, brand and two link columns · signature: the working player, one highlighter swipe
+ * axes: warm-grey/geometric-sans/yellow · posture: Corridor · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V3 · weakest: V, the shape is kept at polish depth; the hero now fills one screen and the player is its own section */
+/* Hallmark · waive 38iii · the highlighted "course." appears once, in the hero · it is the product's one signature device and nothing else in a heading is set apart */
+/* Hallmark · waive 6b · one centred column under the Corridor posture · the folder and play stickers sit off the text axis and break it */
+/* Hallmark · waive 28b · course videos are the visitor's own local files · no poster frame exists until the browser has decoded one */
+/* Hallmark · waive 69 · the no-upload promise is the product's single claim · each section states it for a different reader: hero, policy, questions */
+/* Hallmark · reworded "Resumes where you stopped" to "Progress, per course" · 69 names the echo of the resume claim */
+/* Hallmark · reworded "Opens the files already in your course folder" copy "about forty more" to "about thirty more" · the text list holds 41 types and six are shown as chips */
+/* Hallmark · reworded the footer line, one promise and the FAQ and doc-page answers, shorter and with the same facts · 58 and 69 name them */
+/* Hallmark · answered F7 · the meter is a progress track and the tabs are controls, so the pill radius is correct on them */
 /* Light is the default; a dark set follows the device's own setting. Every colour on the site is one of these roles. */
 :root {
   color-scheme: light dark;
@@ -51,13 +63,14 @@
 
   --display: "Plus Jakarta Sans Variable", "Helvetica Neue", Arial, system-ui, sans-serif;
   --sans: "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; /* taste-skill-ignore: literal code only */
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --step-small: 0.875rem;
   --step-body: 1.0625rem;
   --step-lead: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
   --step-h2: clamp(2rem, 1.3rem + 3vw, 3.5rem);
   --step-h1: clamp(2.75rem, 1.2rem + 6.4vw, 5.25rem);
+  --step-hero: clamp(3rem, 1.2rem + 8.4vw, 7.5rem);
 
   --r-pill: 9999px;
   --r-card: 32px;
@@ -75,6 +88,9 @@
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 
   --a-hue: var(--hi);
+
+  /* Focus ring: ink on light surfaces; dark surfaces (privacy panel, toast, media) swap it. */
+  --focus: var(--ink);
 }
 
 @media (prefers-color-scheme: dark) {

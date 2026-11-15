@@ -171,7 +171,7 @@ function TimedPlayer({ url, asset, subtitles, initialProgress, autoplay, onSampl
       <div className="player-bar">
         <span>
           {resumeLabel}
-          {!isAudio && subtitles.length > 0 && ` · ${subtitles.length} caption ${subtitles.length === 1 ? "track" : "tracks"}`}
+          {!isAudio && subtitles.length > 0 && `, ${subtitles.length} caption ${subtitles.length === 1 ? "track" : "tracks"}`}
         </span>
         <label className="speed">
           Speed

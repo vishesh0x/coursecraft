@@ -74,6 +74,10 @@ leaves your browser" promise depends on it.
   than after it.
 - pdf.js (about 440 kB plus its worker) is a lazy chunk and never loads unless a PDF is opened.
 
+## Design audit
+
+The stylesheets start with a Hallmark stamp (`src/styles/tokens.css`) recording the design decisions and the few gates waived on purpose, each with its reason. The last audit reported 0 Floor failures and 0 open Reflex findings.
+
 ## Pages
 
 `/` home with live demo · `/course` player · `/how-it-works` · `/browsers` · `/privacy` (security policy explained) ·

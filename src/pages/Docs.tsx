@@ -9,14 +9,14 @@ export function HowItWorksPage() {
     <Page title="How Coursecraft reads a folder" lede="No setup, no import step. The folder you already keep is the course.">
       <h2>Chapters</h2>
       <p>
-        Every folder, however deep, is a chapter, and chapters keep the nesting of your folders. Names are sorted the way a
-        person would sort them, so “Lesson 2” comes before “Lesson 10”.
+        Every folder is a chapter, and chapters keep your nesting. Names sort the way a person would, so “Lesson 2” comes
+        before “Lesson 10”.
       </p>
 
       <h2>Lessons</h2>
       <p>
-        Files in the same folder that share a name, ignoring the extension, are one lesson. A lesson opens on its video if
-        it has one, then on its audio, a PDF, an HTML page, notes, an image, or whatever else it holds. Every file stays one tab away.
+        Files in one folder that share a name, ignoring the extension, are one lesson. It opens on its video if it has
+        one, otherwise on audio, a PDF, an HTML page, notes or an image. Every file stays one tab away.
       </p>
       <table>
         <caption>One lesson, called “Intro”</caption>
@@ -31,24 +31,23 @@ export function HowItWorksPage() {
         </tbody>
       </table>
       <p>
-        A caption file whose name carries a language, such as <code>.en</code> or <code>.de.forced</code>, joins the video
-        of the same name. Captions with no matching video become a lesson of their own.
+        Captions named with a language, such as <code>.en</code> or <code>.de.forced</code>, join the video of the same
+        name. Captions with no video become a lesson of their own.
       </p>
 
       <h2>What it leaves out</h2>
       <p>
         Unfinished downloads (<code>.part</code>, <code>.partial</code>, <code>.crdownload</code>, <code>.tmp</code>,{" "}
-        <code>.download</code>) and the litter systems leave behind (<code>.DS_Store</code>, <code>Thumbs.db</code>,{" "}
-        <code>desktop.ini</code>, and files starting <code>._</code>) are skipped. A folder with more than 25,000 files is
-        refused, so a stray choice of your whole disk does not freeze the tab.
+        <code>.download</code>) and system litter (<code>.DS_Store</code>, <code>Thumbs.db</code>, <code>desktop.ini</code>,
+        files starting <code>._</code>) are skipped. A folder with more than 25,000 files is refused, so choosing your
+        whole disk by mistake does not freeze the tab.
       </p>
 
       <h2>Progress</h2>
       <p>
-        While a video plays, its position is written to this browser’s storage about once a second, and again when you
-        pause, change lesson, or leave the tab. A lesson is finished when its video ends or when you say so. Time watched
-        counts only seconds that actually played, so skipping ahead adds nothing. A video you finished starts again from the
-        beginning instead of resting on its last frame.
+        While a video plays, its position is saved in this browser about once a second, and again when you pause, change
+        lesson or leave the tab. A lesson is finished when its video ends or when you say so. Skipping ahead adds no
+        watched time, and a finished video restarts from the beginning.
       </p>
       <p className="doc-end"><Link to="/browsers">See which browsers work</Link></p>
     </Page>
@@ -71,22 +70,21 @@ export function BrowsersPage() {
         </tbody>
       </table>
       <p>
-        Chrome and Edge give pages a folder picker that can keep a permission between visits, so Resume works in one click
-        and asks you to confirm access. Elsewhere Coursecraft uses the basic folder picker. Your progress still comes back,
-        because a course is recognised by its folder name, file names, sizes and dates.
+        Chrome and Edge can keep folder permission between visits, so Resume takes one click and a confirmation.
+        Elsewhere Coursecraft uses the basic picker. Your progress still comes back, because a course is recognised by
+        its folder name, file names, sizes and dates.
       </p>
       <h2>PDFs, audio and other files</h2>
       <p>
-        PDFs are drawn by Coursecraft itself, not by the browser’s own viewer, so they look the same on a phone as on a
-        laptop, with a page counter and zoom. Audio (mp3, m4a, wav, ogg, flac and similar) plays with the same resume
-        tracking as video. Word, PowerPoint, Excel and Keynote files cannot be previewed without sending them to a service,
-        which Coursecraft never does, so export them as PDF or use Save file to open them in your own app.
+        PDFs are drawn by Coursecraft, not the browser’s viewer, so they look the same on a phone as on a laptop. Audio
+        resumes like video. Word, PowerPoint, Excel and Keynote files cannot be previewed without sending them to a
+        service, which Coursecraft never does: export them as PDF, or use Save file to open them in your own app.
       </p>
       <h2>Video formats</h2>
       <p>
-        Coursecraft does not convert video. Your browser plays it, so what works is up to the browser. An mp4 file with
-        H.264 video and AAC audio plays in all of them. WebM plays in current Chrome, Edge and Firefox. MKV and MOV depend on
-        the container and the codecs inside, and some will not play; the player says so and leaves the file alone.
+        Coursecraft does not convert video; your browser plays it. An mp4 with H.264 video and AAC audio plays everywhere.
+        WebM plays in current Chrome, Edge and Firefox. MKV and MOV depend on their codecs, and some will not play; the
+        player says so and leaves the file alone.
       </p>
       <h2>Phones and tablets</h2>
       <table>
@@ -101,12 +99,11 @@ export function BrowsersPage() {
         </tbody>
       </table>
       <p>
-        Where only files can be chosen, select a lesson’s files together (the video, its captions, its slides) and
-        Coursecraft groups them by name as usual. Folders give chapters; a plain file selection gives a single list. You
-        will choose the files again each visit, and your progress comes back when the names, sizes and dates match.
-        Large courses are far easier on a laptop.
+        Where only files can be chosen, select a lesson’s files together and Coursecraft groups them by name. A file
+        selection gives one list, not chapters. You choose the files again each visit, and progress comes back when names,
+        sizes and dates match.
       </p>
-      <p className="doc-end"><Link to="/how-it-works">Read how a folder becomes a course</Link></p>
+      <p className="doc-end"><Link to="/how-it-works">How it works</Link></p>
     </Page>
   );
 }
@@ -132,22 +129,21 @@ export function PrivacyPage() {
     <Page title="Privacy and security" lede="Coursecraft is built so that it cannot send your course anywhere, and the page says how you can check.">
       <h2>What it stores</h2>
       <p>
-        In your browser’s own storage on this device: one record per course (its name, counts, size, when you last opened it
-        and, where the browser allows, a handle to the folder) and its progress (video positions, finished lessons, time
-        watched), and your light or dark choice if you use the toggle. Nothing else. There are no cookies and no account. Forget a course in your library to remove its record, or
-        clear this site’s data in your browser to remove everything.
+        In your browser’s storage on this device: one record per course (name, counts, size, last opened and, where
+        allowed, a folder handle), its progress, and your light or dark choice. Nothing else, and no cookies. Forget a
+        course in your library to remove its record, or clear this site’s data to remove everything.
       </p>
 
       <h2>What it reads</h2>
       <p>
-        Files are read from the folder you choose, read-only, when a lesson needs them. Their contents are held in memory to
-        play or show them and are not stored by Coursecraft.
+        Files are read from your folder, read-only, when a lesson needs them. They are held in memory to play or show them,
+        and never stored.
       </p>
 
       <h2>What it sends</h2>
       <p>
-        Nothing from your folder, and no analytics. That is not only a promise: the page is served with a content security
-        policy, which the browser enforces, and which leaves the page no way to make a request.
+        Nothing from your folder, and no analytics. The browser enforces this: the page is served with a content security
+        policy that leaves it no way to make a request.
       </p>
       <table>
         <caption>The policy, line by line</caption>
@@ -157,17 +153,15 @@ export function PrivacyPage() {
         </tbody>
       </table>
       <p>
-        You can read the header yourself in your browser’s developer tools, on the network tab, for the page request. The
-        host is a web host like any other: it keeps ordinary request logs for loading this page, such as your IP address,
-        browser and the time. Those logs do not contain anything about your folder.
+        You can read the header in your browser’s developer tools, on the network tab. The web host keeps ordinary request
+        logs for loading this page (IP address, browser, time), and nothing about your folder.
       </p>
 
       <h2>HTML files in your course</h2>
       <p>
-        An HTML page from a folder is the one thing in a course that could carry code, so it is handled in three layers.
-        Scripts, frames, forms, links and inline event handlers are removed first. The result is shown in an iframe with an
-        empty sandbox, which gives it no scripts, no navigation and no access to Coursecraft or its storage. And it carries
-        its own policy that blocks every network request.
+        An HTML page is the one file that could carry code, so it gets three layers. Scripts, frames, forms, links and
+        event handlers are removed. The result is shown in an iframe with an empty sandbox: no scripts, no navigation, no
+        access to Coursecraft or its storage. And it carries its own policy that blocks every request.
       </p>
 
       <h2>Reporting a problem</h2>

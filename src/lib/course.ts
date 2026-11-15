@@ -166,7 +166,7 @@ export function groupEntries(name: string, entries: FileEntry[]): Omit<Course, "
 export async function fingerprintOf(name: string, files: CourseFile[]): Promise<string> {
   const source = JSON.stringify([name, files.map((f) => [f.relativePath, f.size, f.lastModified])]);
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(source));
-  return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join(""); // taste-skill-ignore: clock and hash digits
+  return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
 async function finish(name: string, entries: FileEntry[], signal: AbortSignal): Promise<Course> {

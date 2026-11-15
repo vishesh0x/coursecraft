@@ -38,12 +38,17 @@ function Hero() {
       {note && !loading && (
         <p className="hero-note rise" style={delay(3)}>
           {note}
-          {mode !== "files" && <> <button className="text-btn" onClick={chooseFiles}>Choose individual files instead</button></>}
+          {mode !== "files" && <button className="text-btn" onClick={chooseFiles}>Choose files instead</button>}
         </p>
       )}
-      <div className="hero-stage rise" style={delay(4)}>
-        <HeroPlayer />
-      </div>
+    </section>
+  );
+}
+
+function Demo() {
+  return (
+    <section className="stage-block" aria-label="A working sample of the player" data-reveal>
+      <HeroPlayer />
     </section>
   );
 }
@@ -56,7 +61,7 @@ function Opens() {
       <h2 id="opens-title" data-reveal>Opens the files already in your course folder</h2>
       <ul data-reveal style={delay(1)}>
         {FILE_TYPES.map((t) => <li key={t}>{t}</li>)}
-        <li className="more">and about forty more as plain text</li>
+        <li className="more">and about thirty more as plain text</li>
       </ul>
     </section>
   );
@@ -80,7 +85,7 @@ function Stub({ record, busy }: { record: CourseRecord; busy: boolean }) {
         </button>
         {sure ? (
           <>
-            <button className="text-btn" onClick={() => void forget(record)}>Remove its history and progress</button>
+            <button className="text-btn" onClick={() => void forget(record)}>Remove history</button>
             <button className="text-btn" onClick={() => setSure(false)}>Keep</button>
           </>
         ) : (
@@ -136,12 +141,12 @@ function Features() {
           <h3>One lesson, every file</h3>
           <p>Video, audio, captions, slides and exercises sit behind one set of tabs.</p>
           <div className="mini-tabs" data-ui aria-hidden="true">
-            <span data-on="true">Recursive descent.mp4</span><span>Recursive descent.pdf</span><span>Recursive descent.py</span><span>.en.srt</span>
+            <span>Recursive descent.mp4</span><span>Recursive descent.pdf</span><span>Recursive descent.py</span><span>Recursive descent.en.srt</span>
           </div>
         </article>
         <article className="tile tile-hi" data-reveal style={delay(1)}>
-          <h3>Resumes where you stopped</h3>
-          <p>Position, finished lessons and time watched, kept per course.</p>
+          <h3>Progress, per course</h3>
+          <p>Position, finished lessons and time watched.</p>
           <div className="mini-resume" data-ui aria-hidden="true">
             <strong>12:40</strong><span>of 33:12</span>
             <div className="meter"><span style={{ width: "38%" }} /></div>
@@ -155,14 +160,14 @@ function Features() {
         <article className="tile tile-ink tile-wide" data-reveal style={delay(1)}>
           <h3>HTML previews run in a sandbox</h3>
           <p>HTML pages show with scripts, links and outside requests switched off.</p>
-          <pre className="mini-code" aria-hidden="true"><code>{'<iframe sandbox="" src="blob:…">\n  scripts: off · forms: off · links: off'}</code></pre>
+          <pre className="mini-code" aria-hidden="true"><code>{'<iframe sandbox="" src="blob:…">\n  scripts: off\n  forms: off\n  links: off'}</code></pre>
         </article>
       </div>
     </section>
   );
 }
 
-const PROMISES = ["No account to make", "No upload, ever", "No analytics or cookies", "No requests once the page has loaded", "Folders opened read-only"];
+const PROMISES = ["No account to make", "No copy of your files", "No analytics or cookies", "Folders opened read-only"];
 
 function Privacy() {
   return (
@@ -188,12 +193,12 @@ function Privacy() {
 }
 
 const FAQ: { q: string; a: string }[] = [
-  { q: "Does it upload my files?", a: "No. Your browser reads the files from disk and plays them from memory. The page is not allowed to make network requests, and the privacy page lists the policy that enforces it." },
-  { q: "Why will my MKV not play?", a: "Coursecraft hands the file to your browser, and browsers differ on Matroska and on some codecs. An mp4 with H.264 video and AAC audio plays everywhere." },
-  { q: "What if I move the folder?", a: "Open it again from its new place. It is recognised when the folder name, file names, sizes and dates match; a copy that changes the dates starts fresh." },
-  { q: "Where is my progress kept?", a: "In this browser’s own storage on this device, under this site’s address. Clearing site data removes it, and so does Forget in your library." },
-  { q: "Does it work offline?", a: "The page has to load once. It has no service worker, so a later offline visit depends on your browser’s cache. Your course files never need the network." },
-  { q: "Which browsers work?", a: "Chrome and Edge reopen a course in one click. Firefox and Safari open folders too, but ask for the folder each visit. The browsers page has the details." },
+  { q: "Does it upload my files?", a: "No. Your browser reads the files from disk and plays them from memory, and the page is not allowed to make network requests." },
+  { q: "Why will my MKV not play?", a: "Browsers differ on Matroska and some codecs. An mp4 with H.264 video and AAC audio plays everywhere." },
+  { q: "What if I move the folder?", a: "Open it again from the new place. It is recognised when the folder name, file names, sizes and dates match." },
+  { q: "Where is my progress kept?", a: "In this browser, on this device. Clearing site data removes it, and so does Forget in your library." },
+  { q: "Does it work offline?", a: "The page has to load once. It has no service worker, so a later offline visit depends on your browser’s cache." },
+  { q: "Which browsers work?", a: "Chrome and Edge reopen a course in one click. Firefox and Safari ask for the folder each visit." },
 ];
 
 function Faq() {
@@ -246,6 +251,7 @@ export default function Home() {
   return (
     <main id="main">
       <Hero />
+      <Demo />
       <Opens />
       <Library />
       <HowItWorks />

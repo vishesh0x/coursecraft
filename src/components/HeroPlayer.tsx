@@ -56,12 +56,12 @@ function Pane({ file, lesson }: { file: CourseFile; lesson: LessonUnit }) {
     return (
       <div className="image-stage">
         <svg viewBox="0 0 320 200" role="img" aria-label="A stack with PUSH 2, PUSH 3 and ADD">
-          <rect x="110" y="20" width="100" height="40" rx="8" fill="#2a2a30" />
-          <rect x="110" y="68" width="100" height="40" rx="8" fill="#2a2a30" />
-          <rect x="110" y="116" width="100" height="40" rx="8" fill="#f5e642" />
-          <text x="160" y="46" textAnchor="middle" fill="#f4f4f5" fontSize="15" fontFamily="Inter Variable, sans-serif">PUSH 2</text>
-          <text x="160" y="94" textAnchor="middle" fill="#f4f4f5" fontSize="15" fontFamily="Inter Variable, sans-serif">PUSH 3</text>
-          <text x="160" y="142" textAnchor="middle" fill="#18181b" fontSize="15" fontWeight="600" fontFamily="Inter Variable, sans-serif">ADD → 5</text>
+          <rect x="110" y="20" width="100" height="40" rx="8" fill="var(--panel-2)" />
+          <rect x="110" y="68" width="100" height="40" rx="8" fill="var(--panel-2)" />
+          <rect x="110" y="116" width="100" height="40" rx="8" fill="var(--hi)" />
+          <text x="160" y="46" textAnchor="middle" fill="var(--on-media)" fontSize="15" fontFamily="var(--sans)">PUSH 2</text>
+          <text x="160" y="94" textAnchor="middle" fill="var(--on-media)" fontSize="15" fontFamily="var(--sans)">PUSH 3</text>
+          <text x="160" y="142" textAnchor="middle" fill="var(--on-hi)" fontSize="15" fontWeight="600" fontFamily="var(--sans)">ADD → 5</text>
         </svg>
       </div>
     );

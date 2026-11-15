@@ -1,10 +1,18 @@
 # Coursecraft
 
-Open a folder, get a course. Coursecraft plays the course folder already on your disk: folders become chapters,
-files that share a name become one lesson (video + captions + slides + code), and it remembers where you stopped.
+**Live: [cc.visheshraghuvanshi.in](https://cc.visheshraghuvanshi.in)**
+
+Open a folder, get a course. Coursecraft plays the course folder already on your disk: folders become chapters, files
+that share a name become one lesson (video + captions + slides + code), and it remembers where you stopped.
 Everything runs in the browser tab. Nothing is uploaded.
 
-This is a ground-up redesign and rebuild of the original Vite + React prototype.
+## Features
+
+- **Folders become chapters.** Files with the same base name group into a single lesson.
+- **Video, audio, captions, PDFs, images, code and HTML** play or preview in place. HTML previews run in an empty sandbox.
+- **Resume where you stopped.** Course records, folder handles and progress live in IndexedDB on your device.
+- **Private by construction.** No accounts, analytics or third-party requests; the CSP forbids them (`connect-src 'none'`).
+- **Light and dark**, following the system with a manual toggle.
 
 ## Stack
 
@@ -12,11 +20,11 @@ This is a ground-up redesign and rebuild of the original Vite + React prototype.
 | --- | --- |
 | UI | React 19, TypeScript (strict), React Router |
 | Build | Vite |
-| Type | Plus Jakarta Sans and Inter (variable), self-hosted via `@fontsource-variable`, so the CSP can stay closed |
+| Type | Plus Jakarta Sans and Inter (variable), self-hosted via `@fontsource-variable`; the Latin files are preloaded |
 | Storage | IndexedDB (course records, folder handles, progress) |
-| PDFs | pdf.js (Apache-2.0), loaded only when a PDF is opened, drawn page by page so phones show every page |
+| PDFs | pdf.js, loaded only when a PDF is opened and drawn page by page |
 | Hosting | Cloudflare Workers with Static Assets (`wrangler.jsonc`) |
-| Tests | Vitest (grouping, captions, storage validation, route and header contract, render smoke tests) |
+| Tests | Vitest + jsdom (grouping, captions, storage validation, route and header contract, render smoke tests) |
 
 ## Run it
 
@@ -28,7 +36,8 @@ npm run build      # typecheck, then production build into dist/
 npm run cf:dev     # build, then run the real Worker locally with wrangler
 ```
 
-Node 20 or newer (`.nvmrc` pins 22). The native folder picker needs a secure context: `https` or `localhost`.
+Node 20 or newer (`.nvmrc` pins 22). The native folder picker needs a secure context: `https` or `localhost`, and a
+Chromium-based browser (see the `/browsers` page in the app for details).
 
 ## Deploy to Cloudflare
 
@@ -37,7 +46,7 @@ npx wrangler login
 npm run deploy
 ```
 
-That builds the app and publishes the `coursecraft` Worker (rename it in `wrangler.jsonc`). Add a custom domain under
+This builds the app and publishes the `coursecraft` Worker (rename it in `wrangler.jsonc`). Add a custom domain under
 Workers & Pages → your Worker → Settings → Domains.
 
 ### What the Worker does
@@ -49,19 +58,21 @@ HTML. Hashed assets skip the Worker entirely (`run_worker_first` in `wrangler.js
 
 > **Keep in sync:** a new `<Route>` in `src/App.tsx` must also be added to `worker/routes.ts`. A test fails if you forget.
 
-## Design
+### Cloudflare Web Analytics
 
-A warm gray canvas, white cards, pill-shaped controls and one highlighter yellow. The type is Plus Jakarta Sans for
-display and Inter for interface text, both self-hosted. The landing page leads with the product: the hero is a working
-copy of the player (pick lessons, switch files, mark one finished) running on sample data through the app's own grouping
-code, and "Folders become chapters" lets you edit file names and watch the contents regroup. A highlighter swipe over
-"course." is the one signature device. The player itself uses the same system: a white sidebar card, pill tabs, the media
-in a white card, and yellow only on progress and finished lessons.
+If Web Analytics auto-injection is on for your zone, Cloudflare adds a `beacon.min.js` script to the page. The strict CSP
+blocks it and logs a console error. HTML responses are served with `Cache-Control: no-transform`, which tells Cloudflare
+not to modify them, so nothing is injected. If you still see the error, turn the setting off under
+Analytics & Logs → Web Analytics → your site → Manage site → Disable. Do not loosen the CSP to allow it: the "nothing
+leaves your browser" promise depends on it.
 
-The site follows the device's light or dark setting, and a toggle in the nav (and in the player bar) overrides it. The choice is the only thing stored outside the course data, under `coursecraft-theme`, and `public/theme.js` applies it before first paint so there is no flash.
+## Performance notes
 
-Motion follows a short list of rules: strong ease-out curves, 160ms press feedback on controls, hover effects only on
-real pointers, only transform, opacity and clip-path animated for entrances, and a reduced-motion fallback for all of it.
+- The only render-blocking requests are the stylesheet and `theme.js`. `theme.js` has to run before first paint to apply
+  the saved theme without a flash, and the CSP forbids inlining it.
+- The two Latin font files used on first paint are preloaded from `<head>`, so they download alongside the CSS rather
+  than after it.
+- pdf.js (about 440 kB plus its worker) is a lazy chunk and never loads unless a PDF is opened.
 
 ## Pages
 
@@ -70,15 +81,15 @@ real pointers, only transform, opacity and clip-path animated for entrances, and
 
 ## Security
 
-See [SECURITY.md](SECURITY.md). In short: a strict CSP and header set in `public/_headers` (`connect-src 'none'`),
-HTML previews in an empty sandbox, read-only folder access, validated storage, size and depth caps, and no inline
-scripts or `dangerouslySetInnerHTML` anywhere.
+See [SECURITY.md](SECURITY.md). In short: a strict CSP and header set in `public/_headers`, HTML previews in an empty
+sandbox, read-only folder access, validated storage, size and depth caps, and no inline scripts or
+`dangerouslySetInnerHTML` anywhere. `npm audit` reports 0 vulnerabilities.
 
 ## Layout
 
 ```
 worker/            Cloudflare Worker (routing + real 404s)
-public/            _headers, robots.txt, security.txt, favicon, manifest
+public/            _headers, robots.txt, security.txt, favicon, manifest, theme.js
 src/lib/           course grouping, captions, safe HTML, storage (pure, tested)
 src/state/         course context, persisted session
 src/components/    site chrome, contents sheet, player pieces
@@ -88,8 +99,9 @@ src/styles/        tokens, site, app
 
 ## Before you ship
 
-- `public/.well-known/security.txt` points at `github.com/vishesh0x/coursecraft`: create that repository (or change the URL) and turn on private vulnerability reporting, then refresh the file's `Expires` date yearly.
-- Add `og:image` and a sitemap once you have a domain (both need an absolute URL).
+- `public/.well-known/security.txt` points at `github.com/vishesh0x/coursecraft`: make sure that repository exists with
+  private vulnerability reporting on, and refresh the file's `Expires` date yearly.
+- Add `og:image` and a sitemap (both need absolute URLs, e.g. `https://cc.visheshraghuvanshi.in/...`).
 
 ## Licence
 

@@ -38,10 +38,9 @@ export default {
     const shell = await env.ASSETS.fetch(new Request(new URL("/", url), request));
     const headers = new Headers(shell.headers);
     const known = KNOWN.has(normalise(url.pathname));
-    if (!known) {
-      headers.set("X-Robots-Tag", "noindex");
-      headers.set("Cache-Control", "no-store");
-    }
+    // no-transform keeps Cloudflare from injecting its analytics beacon, which the CSP would block.
+    headers.set("Cache-Control", known ? "no-cache, no-transform" : "no-store, no-transform");
+    if (!known) headers.set("X-Robots-Tag", "noindex");
     return new Response(request.method === "HEAD" ? null : shell.body, { status: known ? shell.status : 404, headers });
   },
 } satisfies ExportedHandler<Env>;

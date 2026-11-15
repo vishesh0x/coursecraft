@@ -20,4 +20,9 @@ describe("deployment contract", () => {
     expect(headers).toContain("worker-src 'self'");
     expect(headers).not.toMatch(/unsafe-(inline|eval)/);
   });
+
+  it("stops Cloudflare injecting its analytics beacon, which the CSP would block", () => {
+    expect(read("public/_headers")).toMatch(/\/index\.html\n\s+Cache-Control: [^\n]*no-transform/);
+    expect(read("worker/index.ts")).toContain("no-transform");
+  });
 });
